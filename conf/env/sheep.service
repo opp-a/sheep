@@ -1,0 +1,16 @@
+[Unit]
+Description=sheep
+
+[Service]
+User=nanhui
+Type=simple
+ExecStart=/opt/sheep/sheep >/dev/null
+ExecStartPre=/usr/bin/printf "******************************Welcome Use Sheep***************************************\n"
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStop=/bin/kill -9 $MAINPID
+KillMode=process
+Restart=on-failure
+RestartSec=1s
+
+[Install]
+WantedBy=multi-user.target
