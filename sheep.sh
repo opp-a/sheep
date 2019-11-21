@@ -22,6 +22,7 @@ fHelp()
 	echo " UserAges:"
 	echo "            ./sheep.sh help                                 :帮助信息"
 	echo "            ./sheep.sh package                              :打包安装包"
+	echo "            ./sheep.sh installubuntupg                      :在线安装postgresql 默认 数据库sheep 用户root 密码password"
 	echo "            ./sheep.sh remoteinstall 47.103.94.221 nanhui   :远程安装服务"
 	echo " Examples:"
 	echo "            ./sheep.sh help"
@@ -182,8 +183,8 @@ fInstallPGForUbuntuOnline()
 		sudo apt-get install postgresql -y --allow-unauthenticated
 
 		sudo su - postgres -c "psql << EOF
-CREATE USER nanhui WITH SUPERUSER CREATEDB CREATEROLE PASSWORD 'nabarcoffeepwd';
-CREATE DATABASE nabarcoffee OWNER nanhui;
+CREATE USER root WITH SUPERUSER CREATEDB CREATEROLE PASSWORD 'password';
+CREATE DATABASE sheep OWNER root;
 EOF"
 	fi
 	
@@ -211,6 +212,9 @@ fMain()
 
 	elif [ "$1" = "install" ];then
 		fInstall
+
+	elif [ "$1" = "installubuntupg" ];then
+		fInstallPGForUbuntuOnline
 
 	elif [ "$1" = "remoteinstall" ];then
 		# config ssh remote with no password
