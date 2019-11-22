@@ -23,7 +23,7 @@ fHelp()
 	echo "            ./sheep.sh help                                 :帮助信息"
 	echo "            ./sheep.sh package                              :打包安装包"
 	echo "            ./sheep.sh installubuntupg                      :在线安装postgresql 默认 数据库sheep 用户root 密码password"
-	echo "            ./sheep.sh remoteinstall 47.103.94.221 nanhui   :远程安装服务"
+	echo "            ./sheep.sh remoteinstall 127.0.0.1 root         :远程安装服务"
 	echo " Examples:"
 	echo "            ./sheep.sh help"
 }
