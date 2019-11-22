@@ -4,3 +4,6 @@
 
 # 系统架构图
 ![image](./document/ArchitectureDiagram.png)
+
+# 系统详细设计图
+![image](./document/DetailDesignDiagram.png)
