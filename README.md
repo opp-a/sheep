@@ -3,4 +3,4 @@
 
 
 # 系统架构图
-![image](./document/Architecture Diagram.png)
+![image](./document/ArchitectureDiagram.png)
