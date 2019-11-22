@@ -1,6 +1,6 @@
 ## 你是最棒的！ Little Sheep！！！
-![](./sheep.jpg)
+![image](./document/sheep.jpg)
 
 
 # 系统架构图
-![](./Architecture Diagram.png)
+![image](./document/Architecture Diagram.png)
