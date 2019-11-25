@@ -6,4 +6,4 @@
 ![image](./document/ArchitectureDiagram.png)
 
 # 系统详细设计图
-![image](./document/DetailDesignDiagram.png)
+![image](./document/DetailDesignDiagram.svg)
