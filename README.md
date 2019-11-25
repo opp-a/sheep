@@ -7,3 +7,11 @@
 
 # 系统详细设计图
 ![image](./document/DetailDesignDiagram.svg)
+
+
+### WEB详细设计图
+![image](./document/WebDetailDesignDiagram.png)
+### SERVICE详细设计图
+![image](./document/ServiceDetailDesignDiagram.png)
+### DB详细设计图
+![image](./document/DBDetailDesignDiagram.png)
