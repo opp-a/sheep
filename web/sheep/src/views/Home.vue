@@ -1,11 +1,17 @@
 <template>
   <el-container>
     <el-header>
-      <el-menu :default-active="activeIndex" class="el-menu" mode="horizontal" @select="handleSelect"  router="true">
-        <el-menu-item index="1">首页</el-menu-item>
-        <el-menu-item index="2">货仓</el-menu-item>
-        <el-menu-item index="3">文化墙</el-menu-item>
-        <el-menu-item index="4" route="">个人中心</el-menu-item>
+      <el-menu :default-active="activeIndex" mode="horizontal" @select="handleSelect" router="true"
+               style="border-bottom: none;">
+        <el-menu-item><img style="width: 155px; height:60px" src="../assets/home/logo.png" alt="IMG"></el-menu-item>
+        <el-menu-item index="home" route="/">首页</el-menu-item>
+        <el-menu-item index="warehouse" route="">货仓</el-menu-item>
+        <el-menu-item index="culture" route="">文化墙</el-menu-item>
+        <el-submenu class="el-menu-item-self" index="self" route="">
+          <template slot="title">个人中心</template>
+          <el-menu-item index="self">个人中心</el-menu-item>
+          <el-menu-item index="logout">退出</el-menu-item>
+        </el-submenu>
       </el-menu>
     </el-header>
 
@@ -23,6 +29,7 @@
 </template>
 
 <style>
+/* 导航头区域 */
 .el-header, .el-footer {
   background-color: #FFFFFF;
   color: #333;
@@ -30,24 +37,19 @@
   line-height: 60px;
 }
 
-.el-aside {
-  background-color: #D3DCE6;
-  color: #333;
+.el-submenu.el-menu-item-self {
   text-align: center;
-  line-height: 200px;
+  background-color: #ffffff;
+  float: right;
 }
 
-.el-divider {
-  background-color: #CCCCCC;
-  color: #333;
-  text-align: center;
-}
-
+/* 内容区域 */
 .el-main.brand {
   background-color: #a9fff1;
   color: #333;
   text-align: center;
   line-height: 460px;
+  margin-top: 5px;
 }
 
 .el-main.product {
@@ -82,22 +84,13 @@ body > .el-container {
   margin-bottom: 40px;
 }
 
-.el-container:nth-child(5) .el-aside,
-.el-container:nth-child(6) .el-aside {
-  line-height: 260px;
-}
-
-.el-container:nth-child(7) .el-aside {
-  line-height: 320px;
-}
 </style>
 
 <script>
 export default {
   data () {
     return {
-      activeIndex: '1',
-      activeIndex2: '1'
+      activeIndex: 'home'
     }
   },
   methods: {

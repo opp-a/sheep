@@ -2,7 +2,7 @@
     <div class="container-login100">
       <div class="wrap-login100">
         <div class="login100-pic js-tilt" data-tilt>
-          <img src="./images/img-01.png" alt="IMG">
+          <img src="../../assets/login/img-01.png" alt="IMG">
         </div>
 
         <form class="login100-form validate-form">
@@ -11,7 +11,7 @@
           <div class="wrap-input100 validate-input">
             <input class="input100" type="text" name="phone" placeholder="手机号">
             <span class="focus-input100"></span>
-            <span class="symbol-input100"><i class="fa fa-phone" aria-hidden="true"></i></span>
+            <span class="symbol-input100"><i class="fa fa-mobile-phone" aria-hidden="true"></i></span>
           </div>
 
           <div class="wrap-input100 validate-input">
@@ -48,7 +48,7 @@ export default {}
 </script>
 
 <style scoped>
-@import 'fonts/font-awesome-4.7.0/css/font-awesome.min.css';
+@import "../../plugins/fonts/font-awesome-4.7.0/css/font-awesome.min.css";
 @import 'css/util.css';
 @import 'css/main.css';
 </style>
