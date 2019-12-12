@@ -1,0 +1,29 @@
+/* 导航头尾区域 */
+.el-header {
+    color: #333;
+    line-height: 60px;
+}
+
+.el-footer {
+    color: #CFCFCF;
+    text-align: center;
+    line-height: 60px;
+}
+
+.el-submenu.el-menu-item-self {
+    text-align: center;
+    float: right;
+}
+
+/* 内容区域 */
+.el-main.brand {
+    background-color: #FFFFFF;
+    color: #333;
+    text-align: center;
+    line-height: 460px;
+    margin-top: 5px;
+}
+
+.section{
+    border-radius: 10px;
+}

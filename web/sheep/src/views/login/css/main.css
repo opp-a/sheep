@@ -7,22 +7,22 @@
 
 @font-face {
   font-family: Poppins-Regular;
-  src: url('../../../plugins/fonts/poppins/Poppins-Regular.ttf');
+  src: url('../../../plugins/js/fonts/poppins/Poppins-Regular.ttf');
 }
 
 @font-face {
   font-family: Poppins-Bold;
-  src: url('../../../plugins/fonts/poppins/Poppins-Bold.ttf');
+  src: url('../../../plugins/js/fonts/poppins/Poppins-Bold.ttf');
 }
 
 @font-face {
   font-family: Poppins-Medium;
-  src: url('../../../plugins/fonts/poppins/Poppins-Medium.ttf');
+  src: url('../../../plugins/js/fonts/poppins/Poppins-Medium.ttf');
 }
 
 @font-face {
   font-family: Montserrat-Bold;
-  src: url('../../../plugins/fonts/montserrat/Montserrat-Bold.ttf');
+  src: url('../../../plugins/js/fonts/montserrat/Montserrat-Bold.ttf');
 }
 
 /*//////////////////////////////////////////////////////////////////

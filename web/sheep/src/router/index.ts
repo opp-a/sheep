@@ -4,22 +4,52 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue')
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: () => import(/* webpackChunkName: "about" */ '../views/login/login.vue')
-  }
+    {
+        path: '/',
+        name: 'index',
+        component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue')
+    },
+    {
+        path: '/home',
+        name: 'home',
+        redirect: '/',
+        component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue')
+    },
+    {
+        path: '/login',
+        name: 'login',
+        component: () => import(/* webpackChunkName: "about" */ '../views/login/Login.vue')
+    },
+    {
+        path: '/warehouse',
+        name: 'warehouse',
+        component: () => import(/* webpackChunkName: "about" */ '../views/login/Login.vue')
+    },
+    {
+        path: '/culture',
+        name: 'culture',
+        component: () => import(/* webpackChunkName: "about" */ '../views/login/Login.vue')
+    },
+    {
+        path: '/self',
+        name: 'self',
+        component: () => import(/* webpackChunkName: "about" */ '../views/login/Login.vue')
+    }
 ]
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+    mode: 'history',
+    base: process.env.BASE_URL,
+    scrollBehavior (to, from, savedPosition) {
+        if (to.hash) {
+            return { selector: to.hash }
+        } else if (savedPosition) {
+            return savedPosition
+        } else {
+            return { x: 0, y: 0 }
+        }
+    },
+    routes
 })
 
 export default router

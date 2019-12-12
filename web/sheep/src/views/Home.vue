@@ -1,95 +1,64 @@
 <template>
   <el-container>
+    <!--    头 -->
     <el-header>
-      <el-menu :default-active="activeIndex" mode="horizontal" @select="handleSelect" router="true"
+      <el-menu :default-active="activeIndex" mode="horizontal" @select="handleSelect" router
                style="border-bottom: none;">
         <el-menu-item><img style="width: 155px; height:60px" src="../assets/home/logo.png" alt="IMG"></el-menu-item>
-        <el-menu-item index="home" route="/">首页</el-menu-item>
-        <el-menu-item index="warehouse" route="">货仓</el-menu-item>
-        <el-menu-item index="culture" route="">文化墙</el-menu-item>
-        <el-submenu class="el-menu-item-self" index="self" route="">
+        <el-menu-item index="home">首页</el-menu-item>
+        <el-menu-item index="warehouse">货仓</el-menu-item>
+        <el-menu-item index="culture"> 文化墙</el-menu-item>
+        <el-submenu class="el-menu-item-self" index="self">
           <template slot="title">个人中心</template>
-          <el-menu-item index="self">个人中心</el-menu-item>
-          <el-menu-item index="logout">退出</el-menu-item>
+          <el-menu-item index="self" style="text-align: left"><i class="el-icon-user"></i>个人中心</el-menu-item>
+          <el-menu-item index="login" style="text-align: left"><i class="el-icon-top-left"></i> 退出</el-menu-item>
         </el-submenu>
       </el-menu>
     </el-header>
 
-    <el-main class="brand">品牌形象宣传展示区</el-main>
-    <el-divider></el-divider>
-    <el-main class="product">代表性产品展示区</el-main>
-    <el-divider></el-divider>
-    <el-main class="introduction">公司历程简介</el-main>
-    <el-divider></el-divider>
-    <el-main class="culture">企业文化照片墙</el-main>
-    <el-divider></el-divider>
-    <el-main class="contact">联系方式</el-main>
-    <el-footer>Footer</el-footer>
+    <!--    内容区域-->
+    <div>
+      <el-main class="brand">
+        <full-page ref="fullpage" :options="options" id="fullpage">
+          <div class="section" style="margin-top: -20px">
+            宣传展示
+          </div>
+          <div class="section">
+            代表性产品展示区
+          </div>
+          <div class="section">
+            公司历程简介
+          </div>
+          <div class="section">
+            企业文化照片墙
+          </div>
+          <div class="section">
+            联系方式
+          </div>
+        </full-page>
+      </el-main>
+    </div>
+
+    <!--      尾 -->
+    <el-footer>你是最棒的！ Little Sheep!!!</el-footer>
   </el-container>
 </template>
 
 <style>
-/* 导航头区域 */
-.el-header, .el-footer {
-  background-color: #FFFFFF;
-  color: #333;
-  text-align: center;
-  line-height: 60px;
-}
-
-.el-submenu.el-menu-item-self {
-  text-align: center;
-  background-color: #ffffff;
-  float: right;
-}
-
-/* 内容区域 */
-.el-main.brand {
-  background-color: #a9fff1;
-  color: #333;
-  text-align: center;
-  line-height: 460px;
-  margin-top: 5px;
-}
-
-.el-main.product {
-  background-color: #DDDDDD;
-  color: #333;
-  text-align: center;
-  line-height: 460px;
-}
-
-.el-main.introduction {
-  background-color: #FF00FF;
-  color: #333;
-  text-align: center;
-  line-height: 460px;
-}
-
-.el-main.culture {
-  background-color: #FFFF00;
-  color: #333;
-  text-align: center;
-  line-height: 460px;
-}
-
-.el-main.contact {
-  background-color: #00FFFF;
-  color: #333;
-  text-align: center;
-  line-height: 460px;
-}
-
-body > .el-container {
-  margin-bottom: 40px;
-}
-
+@import 'home.css';
 </style>
 
 <script>
+import '@/plugins/js/fullpage.js'
+
 export default {
   data () {
     return {
+      options: {
+        menu: '#menu',
+        anchors: ['page1', 'page2', 'page3', 'page3', 'page3'],
+        sectionsColor: ['#5deeee', '#ef43ef', '#ece74d', '#67ec60', '#535FA2']
+      },
       activeIndex: 'home'
     }
   },
@@ -97,6 +66,9 @@ export default {
     handleSelect (key, keyPath) {
       console.log(key, keyPath)
     }
+  },
+  beforeCreate () {
+    console.log('xxxxx')
   }
 }
 </script>
