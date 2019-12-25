@@ -45,10 +45,10 @@
 
 <script>
 import 'animate.css'
+import 'font-awesome/css/font-awesome.min.css'
 export default {}
 </script>
 
 <style scoped>
-@import '../../plugins/js/fonts/font-awesome-4.7.0/css/font-awesome.min.css';
 @import 'css/main.css';
 </style>

@@ -180,8 +180,8 @@
 </style>
 
 <script>
+import 'font-awesome/css/font-awesome.min.css'
 import '@/plugins/js/fullpage.js'
-import '@/plugins/js/fonts/font-awesome-4.7.0/css/font-awesome.min.css'
 import '@/plugins/js/animate.js'
 import VueGridLayout from 'vue-grid-layout'
 import Contact from '../components/contact/Contact.vue'
