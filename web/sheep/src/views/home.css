@@ -1,29 +1,70 @@
 /* 导航头尾区域 */
-.el-header {
-    color: #333;
-    line-height: 60px;
-}
-
-.el-footer {
-    color: #CFCFCF;
+.header {
+    color: #FFFFFF;
     text-align: center;
     line-height: 60px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0);
+    position: fixed;
+    top: 0px;
 }
 
+/*固定页脚样式*/
+.el-footer {
+    color: rgba(100, 100, 100, 0.5);
+    text-align: center;
+    line-height: 60px;
+    width: 100%;
+    background: rgba(53, 73, 94, 0.0);
+    position: fixed;
+    bottom: 0px;
+}
+
+/*个人中心导航栏居右*/
 .el-submenu.el-menu-item-self {
     text-align: center;
     float: right;
 }
 
-/* 内容区域 */
-.el-main.brand {
-    background-color: #FFFFFF;
-    color: #333;
-    text-align: center;
-    line-height: 460px;
-    margin-top: 5px;
+/* 首页宣传视频样式*/
+.home-video {
+    z-index: 100;
+    top: 50%;
+    left: 50%;
+    /*min-width: 100%;*/
+    min-height: 100%;
+    object-fit: fill; /*这里是关键*/
+    width: auto;
+    height: auto;
 }
 
-.section{
-    border-radius: 10px;
+/* 文化墙布局*/
+ /*模糊背景*/
+.cultureBackground {
+    /*background*/
+    width: 100%;
+    height: 100%;
+    background: hsla(0, 0%, 60%, 0.5);
+    background-size: cover;
+    overflow: hidden;
+    position: relative;
+    margin: 0px;
+    padding: 0px;
 }
+
+.cultureBackground::before {
+    position: absolute;
+    background: url(../assets/home/culture/background.jpg);
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    content: '';
+    filter: blur(12px);
+    z-index: 0;
+    margin: 0px;
+    padding: 0px;
+}
+
+
+
+

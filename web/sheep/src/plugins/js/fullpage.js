@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import 'fullpage.js/vendors/scrolloverflow' // Optional. When using scrollOverflow:true
-import VueFullPage from 'vue-fullpage.js/src/index.js'
+// import './fullpage.scrollHorizontally.min' // Optional. When using fullpage extensions
+import VueFullPage from 'vue-fullpage.js'
+import 'fullpage.js/dist/fullpage.css'
 
 Vue.use(VueFullPage)

@@ -24,6 +24,16 @@ const routes = [
         path: '/warehouse',
         name: 'warehouse',
         component: () => import(/* webpackChunkName: "about" */ '../views/login/Login.vue')
+        // children: [
+        //     {
+        //         path: '1',
+        //         component: () => import(/* webpackChunkName: "about" */ '../views/login/Login.vue')
+        //     },
+        //     {
+        //         path: '2',
+        //         component: () => import(/* webpackChunkName: "about" */ '../views/login/Login.vue')
+        //     }
+        // ]
     },
     {
         path: '/culture',

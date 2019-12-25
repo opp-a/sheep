@@ -26,14 +26,14 @@
             </button>
           </div>
 
-          <div class="text-center p-t-12">
+          <div class="text-center" style="padding-top: 12px; text-align: center">
             <a class="txt2" href="javascript:">
               忘记密码？
             </a>
           </div>
 
-          <div class="text-center p-t-136">
-            <a class="txt2" href="http://www.dowebok.com/" target="_blank">
+          <div class="text-center" style="padding-top: 136px; text-align: center">
+            <a class="txt2" href="javascript:" target="_blank">
               还没有账号？立即注册
               <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
             </a>
@@ -50,6 +50,5 @@ export default {}
 
 <style scoped>
 @import '../../plugins/js/fonts/font-awesome-4.7.0/css/font-awesome.min.css';
-@import 'css/util.css';
 @import 'css/main.css';
 </style>
