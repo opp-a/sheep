@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import '@/plugins/js/fonts/font-awesome-4.7.0/css/font-awesome.min.css'
+import 'font-awesome/css/font-awesome.min.css'
 
 export default {
   name: 'Contact',

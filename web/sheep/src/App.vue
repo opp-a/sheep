@@ -4,7 +4,16 @@
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  updated () {
+  let userName = localStorage.getItem('userName')
+    console.log(userName)
+    if (userName === null || userName === undefined || userName === '') {
+      this.$router.push('/login')
+    } else {
+      this.$store.commit('setUserName', userName)
+    }
+  }
 }
 </script>
 

@@ -154,14 +154,14 @@
     <!--    头 -->
     <div class="header">
       <el-header>
-        <el-menu :default-active="activeIndex" mode="horizontal" @select="handleSelect" router
+        <el-menu default-active="home" mode="horizontal" @select="handleSelect" router
                  style="border-bottom: none;" background-color="rgba(255, 255, 255, 0)" text-color="#A0A0A0"
                  active-text-color="#51EE48">
           <el-menu-item index="home">首页</el-menu-item>
           <el-menu-item index="warehouse">货仓</el-menu-item>
           <el-menu-item index="culture"> 文化墙</el-menu-item>
-          <el-submenu class="el-menu-item-self" index="self">
-            <template slot="title">{{username}}</template>
+          <el-submenu style="text-align: center; float: right;" index="self">
+            <template slot="title">{{this.$store.state.userName}}</template>
             <el-menu-item index="self" style="text-align: left"><i class="el-icon-user"></i>个人中心</el-menu-item>
             <el-menu-item index="login" style="text-align: left"><i class="el-icon-top-left"></i> 退出
             </el-menu-item>
@@ -171,12 +171,60 @@
     </div>
 
     <!--      尾 -->
-    <el-footer>你是最棒的！ Little Sheep!!!</el-footer>
+    <el-footer style=" color: rgba(100, 100, 100, 0.5); text-align: center; line-height: 60px; width: 100%;
+    background: rgba(53, 73, 94, 0.0); position: fixed; bottom: 0px;">你是最棒的！ Little Sheep!!!</el-footer>
   </el-container>
 </template>
 
-<style>
-@import 'home.css';
+<style scoped>
+/* 导航头尾区域 */
+.header {
+  color: #FFFFFF;
+  text-align: center;
+  line-height: 60px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0);
+  position: fixed;
+  top: 0px;
+}
+
+/* 首页宣传视频样式*/
+.home-video {
+  z-index: 100;
+  top: 50%;
+  left: 50%;
+  /*min-width: 100%;*/
+  min-height: 100%;
+  object-fit: fill; /*这里是关键*/
+  width: auto;
+  height: auto;
+}
+
+/*模糊背景*/
+.cultureBackground {
+  /*background*/
+  width: 100%;
+  height: 100%;
+  background: hsla(0, 0%, 60%, 0.5);
+  background-size: cover;
+  overflow: hidden;
+  position: relative;
+  margin: 0px;
+  padding: 0px;
+}
+
+.cultureBackground::before {
+  position: absolute;
+  background: url(../assets/home/culture/background.jpg);
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  content: '';
+  filter: blur(12px);
+  z-index: 0;
+  margin: 0px;
+  padding: 0px;
+}
 </style>
 
 <script>
@@ -204,9 +252,6 @@ export default {
         resetSliders: true,
         parallaxOptions: { type: 'reveal', percentage: 62, property: 'translate' }
       },
-      // 导航栏 params
-      username: 'little sheep', // get from api
-      activeIndex: 'home',
       // 货仓 数据
       shops: [
         { id: '0000', src: 'layer_0000.png' },

@@ -4,12 +4,25 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
-  modules: {
-  }
+    state: {
+        userName: ''
+    },
+    mutations: {
+        setUserName (state, payload) {
+            state.userName = payload
+        }
+    },
+    actions: {
+        minusPriceAsync (context, payload) {
+            setTimeout(() => {
+                context.commit('setUserName', payload) // contextÌá½»
+            }, 2000)
+        }
+    },
+    modules: {},
+    getters: {
+        getMyName: (state) => {
+            return state.userName
+        }
+    }
 })
