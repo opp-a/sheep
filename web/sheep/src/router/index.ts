@@ -38,11 +38,13 @@ const routes = [
     {
         path: '/culture',
         name: 'culture',
+        redirect: '/login',
         component: () => import(/* webpackChunkName: "about" */ '../views/login/Login.vue')
     },
     {
         path: '/self',
         name: 'self',
+        redirect: '/login',
         component: () => import(/* webpackChunkName: "about" */ '../views/login/Login.vue')
     }
 ]

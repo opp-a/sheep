@@ -362,7 +362,7 @@ export default {
       return Math.floor(Math.random() * ((document.documentElement.clientHeight || document.body.clientHeight) - 300))
     },
     getRandomAnimate: function () {
-      var randomCss = ['animated', 'delay-1s']
+      let randomCss = ['animated', 'delay-1s']
       randomCss.push(this.animates[Math.floor(Math.random() * parseInt(this.animates.length))])
       return randomCss
     },

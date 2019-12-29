@@ -15,7 +15,7 @@ export default new Vuex.Store({
     actions: {
         minusPriceAsync (context, payload) {
             setTimeout(() => {
-                context.commit('setUserName', payload) // contextÃ·Ωª
+                context.commit('setUserName', payload) // context??
             }, 2000)
         }
     },

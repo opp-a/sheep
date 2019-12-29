@@ -1,20 +1,20 @@
 <template>
   <div class="container-login100">
     <div class="wrap-login100">
-      <div class="login100-pic js-tilt" data-tilt>
+      <div class="login100-pic" data-tilt>
         <img src="../../assets/login/img-01.png" alt="IMG">
       </div>
 
-      <div class="login100-form validate-form" id="loginForm">
+      <div class="login100-form" id="loginForm">
         <span class="login100-form-title">会员登陆</span>
 
-        <div class="wrap-input100 validate-input">
+        <div class="wrap-input100">
           <input id="phone" class="input100" type="text" name="phone" placeholder="手机号">
           <span class="focus-input100"></span>
           <span class="symbol-input100"><i class="fa fa-mobile-phone" aria-hidden="true"></i></span>
         </div>
 
-        <div class="wrap-input100 validate-input">
+        <div class="wrap-input100">
           <input id="password" class="input100" type="password" name="pass" placeholder="密码">
           <span class="focus-input100"></span>
           <span class="symbol-input100"><i class="fa fa-lock" aria-hidden="true"></i></span>
@@ -66,7 +66,6 @@ export default {
         localStorage.setItem('userName', res.name)
         this.$router.push('/')
       } else {
-        alert(res.name)
         alert('手机号请输入123')
       }
     }
@@ -78,5 +77,5 @@ export default {
 </script>
 
 <style scoped>
-@import 'css/main.css';
+@import "./css/main.css";
 </style>

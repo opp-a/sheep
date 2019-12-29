@@ -5,15 +5,8 @@ axios.defaults.baseURL = ''
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
 /**
- * 获取用户列表
+ * 登录
  */
-
-export const getUserList = data => fetch('/v1/users/list', data)
-
-/**
- * 获取用户
- */
-
 export const login = data => {
   if (data.phone === '123') {
     return {
@@ -27,6 +20,32 @@ export const login = data => {
     }
   }
 }
+
+/**
+ * 列举商品
+ */
+export const getShops = data => {
+  let pageNumber = data.pageNumber
+  let shopsArray = []
+  if (data.page > 3) {
+    return shopsArray
+  }
+  for (let i = 0; i < pageNumber; i++) {
+    shopsArray.push({
+      shopName: 'shop' + data.page + '-' + i,
+      image: 'http://',
+      price: 999,
+      num: 10
+    })
+  }
+  return shopsArray
+}
+
+/**
+ * 获取用户列表
+ */
+
+export const getUserList = data => fetch('/v1/users/list', data)
 
 /**
  * 获取用户数量
