@@ -44,19 +44,12 @@
                   </template>
                 </el-table-column>
               </el-table>
-<!--              <el-row style="position:fixed; bottom: 15px;">-->
-<!--                <el-col :span="12">-->
               <div style="position: fixed; bottom: 15px; width: 75%;">
                 <el-row>
                   <el-col :span="12"><div style="font-size: x-large; color: #3c5977; font-family: Calibri; text-align: left">共计{{ totalPrice }}￥</div></el-col>
                   <el-col :span="12"><el-button @click="pay()">去支付</el-button></el-col>
                 </el-row>
               </div>
-
-<!--                </el-col>-->
-<!--                <el-col :span="12" style="padding-left: 30px">-->
-<!--                </el-col>-->
-<!--              </el-row>-->
             </div>
           </el-col>
         </el-row>

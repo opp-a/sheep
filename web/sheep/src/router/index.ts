@@ -38,8 +38,7 @@ const routes = [
     {
         path: '/culture',
         name: 'culture',
-        redirect: '/login',
-        component: () => import(/* webpackChunkName: "about" */ '../views/login/Login.vue')
+        component: () => import(/* webpackChunkName: "about" */ '../views/culture/Culture.vue')
     },
     {
         path: '/self',
