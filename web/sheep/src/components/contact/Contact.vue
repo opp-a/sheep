@@ -1,10 +1,21 @@
 <template>
   <div class="wrap-contact100">
-    <el-form label-position="right" label-width="80px" :model="addData" :rules="addRules" ref="addForm" show-message
-             inline-message status-icon
-             style="width: calc(100% - 75%);background-color: white; padding: 170px 40px 180px 40px">
-        <span style=" width: 100%; display: block; font-family: Poppins-Regular; font-size: 30px;
-    color: #333333; line-height: 1.2; text-align: center; padding-bottom: 48px;">联系我们</span>
+    <el-form
+      label-position="right"
+      label-width="80px"
+      :model="addData"
+      :rules="addRules"
+      ref="addForm"
+      show-message
+      inline-message
+      status-icon
+      style="width: calc(100% - 75%);background-color: white; padding: 170px 40px 180px 40px"
+    >
+      <span
+        style=" width: 100%; display: block; font-family: Poppins-Regular; font-size: 30px;
+    color: #333333; line-height: 1.2; text-align: center; padding-bottom: 48px;"
+        >联系我们</span
+      >
       <el-form-item label="名称" prop="name">
         <el-input v-model="addData.name" placeholder="请输入姓名"></el-input>
       </el-form-item>
@@ -18,14 +29,19 @@
         </el-select>
       </el-form-item>
       <el-form-item label="内容" prop="content">
-        <el-input type="textarea" v-model="addData.content" placeholder="请输入留言" :rows="5" maxlength="300"
-                  show-word-limit></el-input>
+        <el-input
+          type="textarea"
+          v-model="addData.content"
+          placeholder="请输入留言"
+          :rows="5"
+          maxlength="300"
+          show-word-limit
+        ></el-input>
       </el-form-item>
       <div style="margin: 120px;"></div>
       <el-form-item>
         <div style="text-align: center;">
-          <el-button type="primary" @click="submit('addForm')" style="width: 80%; position: relative;">提交
-          </el-button>
+          <el-button type="primary" @click="submit('addForm')" style="width: 80%; position: relative;">提交 </el-button>
         </div>
       </el-form-item>
     </el-form>
@@ -37,12 +53,18 @@ import 'font-awesome/css/font-awesome.min.css'
 
 export default {
   name: 'Contact',
-  data: function () {
+  data: function() {
     var validateEmail = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入电子邮箱'))
         // eslint-disable-next-line no-useless-escape
-      } else if (this.addData.email.trim().match(/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/) == null) {
+      } else if (
+        this.addData.email
+          .trim()
+          .match(
+            /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/
+          ) == null
+      ) {
         callback(new Error('请输入有效电子邮箱'))
       } else {
         callback()
@@ -56,22 +78,23 @@ export default {
         content: ''
       },
       addRules: {
-        email: [
-          { validator: validateEmail, trigger: 'blur' }
-        ]
+        email: [{validator: validateEmail, trigger: 'blur'}]
       }
     }
   },
   methods: {
-    submit: function (formName) {
-      this.$refs[formName].validate((valid) => {
+    submit: function(formName) {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           alert('submit!')
-          this.$http.post('/addContact', this.addData).then((response) => {
-            // success callback
-          }, (response) => {
-            // error callback
-          })
+          this.$http.post('/addContact', this.addData).then(
+            response => {
+              // success callback
+            },
+            response => {
+              // error callback
+            }
+          )
         } else {
           console.log('error submit!!')
           return false
@@ -80,7 +103,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

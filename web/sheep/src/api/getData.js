@@ -1,8 +1,6 @@
 import axios from 'axios'
 
 axios.defaults.baseURL = ''
-// axios.defaults.headers.common['Authorization'] = AUTH_TOKEN
-// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
 /**
  * 登录
@@ -11,11 +9,13 @@ export const login = data => {
   if (data.phone === '123') {
     return {
       name: 'admin',
+      permissionGroup: 'admin',
       token: 'hello token'
     }
   } else {
     return {
       name: 'admin1',
+      permissionGroup: 'normal',
       token: 'hello token'
     }
   }
@@ -25,8 +25,8 @@ export const login = data => {
  * 列举商品
  */
 export const getShops = data => {
-  let pageNumber = data.pageNumber
-  let shopsArray = []
+  const pageNumber = data.pageNumber
+  const shopsArray = []
   if (data.page > 3) {
     return shopsArray
   }
@@ -67,22 +67,26 @@ export const getUserCount = data => {
     // 只用当请求方法为‘PUT’，‘POST’和‘PATCH’时可用
     // 最后一个函数需return出相应数据
     // 可以修改headers
-    transformRequest: [function (data, headers) {
-      // 可以对data做任何操作
+    transformRequest: [
+      function(data, headers) {
+        // 可以对data做任何操作
 
-      return data
-    }],
+        return data
+      }
+    ],
 
     // 用于对相应数据进行处理
     // 它会通过then或者catch
-    transformResponse: [function (data) {
-      // 可以对data做任何操作
+    transformResponse: [
+      function(data) {
+        // 可以对data做任何操作
 
-      return data
-    }],
+        return data
+      }
+    ],
 
     // `headers` are custom headers to be sent
-    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+    headers: {'X-Requested-With': 'XMLHttpRequest'},
 
     // URL参数
     // 必须是一个纯对象或者 URL参数对象
@@ -92,9 +96,9 @@ export const getUserCount = data => {
 
     // 是一个可选的函数负责序列化`params`
     // (e.g. https://www.npmjs.com/package/qs, http://api.jquery.com/jquery.param/)
-    paramsSerializer: function (params) {
-      return Qs.stringify(params, { arrayFormat: 'brackets' })
-    },
+    // paramsSerializer: function (params) {
+    //   return Qs.stringify(params, { arrayFormat: 'brackets' })
+    // },
 
     // 请求体数据
     // 只有当请求方法为'PUT', 'POST',和'PATCH'时可用
@@ -116,7 +120,7 @@ export const getUserCount = data => {
     // 返回一个promise并提供一个可用的response
     // 其实我并不知道这个是干嘛的！！！！
     // (see lib/adapters/README.md).
-    adapter: function (config) {
+    adapter: function(config) {
       /* ... */
     },
 
@@ -139,12 +143,12 @@ export const getUserCount = data => {
     xsrfHeaderName: 'X-XSRF-TOKEN', // default
 
     // 处理上传进度事件
-    onUploadProgress: function (progressEvent) {
+    onUploadProgress: function(progressEvent) {
       // Do whatever you want with the native progress event
     },
 
     // 处理下载进度事件
-    onDownloadProgress: function (progressEvent) {
+    onDownloadProgress: function(progressEvent) {
       // Do whatever you want with the native progress event
     },
 
@@ -153,7 +157,7 @@ export const getUserCount = data => {
 
     // 定义可获得的http响应状态码
     // return true、设置为null或者undefined，promise将resolved,否则将rejected
-    validateStatus: function (status) {
+    validateStatus: function(status) {
       return status >= 200 && status < 300 // default
     },
 
@@ -165,8 +169,8 @@ export const getUserCount = data => {
     // `httpAgent` and `httpsAgent` define a custom agent to be used when performing http
     // and https requests, respectively, in node.js. This allows options to be added like
     // `keepAlive` that are not enabled by default.
-    httpAgent: new http.Agent({ keepAlive: true }),
-    httpsAgent: new https.Agent({ keepAlive: true }),
+    // httpAgent: new http.Agent({ keepAlive: true }),
+    // httpsAgent: new https.Agent({ keepAlive: true }),
 
     // 'proxy' defines the hostname and port of the proxy server
     // Use `false` to disable proxies, ignoring environment variables.
@@ -182,21 +186,22 @@ export const getUserCount = data => {
         username: 'mikeymike',
         password: 'rapunz3l'
       }
-    },
+    }
 
     // `cancelToken` specifies a cancel token that can be used to cancel the request
     // (see Cancellation section below for details)
     // 用于取消请求？又是一个不知道怎么用的配置项
-    cancelToken: new CancelToken(function (cancel) {
-    })
+    // cancelToken: new CancelToken(function (cancel) {
+    // })
   })
-    .then(function (response) {
+    .then(function(response) {
       console.log(response.data)
       console.log(response.status)
       console.log(response.statusText)
       console.log(response.headers)
       console.log(response.config)
-    }).catch(function (error) {
+    })
+    .catch(function(error) {
       if (error.response) {
         // 发送请求后，服务端返回的响应码不是 2xx
         console.log(error.response.data)

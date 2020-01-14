@@ -1,19 +1,12 @@
 <template>
-  <router-view></router-view>
+  <div id="app">
+    <router-view />
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'app',
-  updated () {
-  let userName = localStorage.getItem('userName')
-    console.log(userName)
-    if (userName === null || userName === undefined || userName === '') {
-      this.$router.push('/login')
-    } else {
-      this.$store.commit('setUserName', userName)
-    }
-  }
+  name: 'app'
 }
 </script>
 
@@ -24,6 +17,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
 }
 </style>
