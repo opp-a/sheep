@@ -1,8 +1,8 @@
-import axios from 'axios'
+// import axios from 'axios'
 
 export const getCulturePictures = data => {
-  let pageNumber = data.pageNumber
-  let pictures = []
+  // const pageNumber = data.pageNumber
+  const pictures = []
   if (data.page > 3) {
     return pictures
   }

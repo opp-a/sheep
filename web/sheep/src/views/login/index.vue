@@ -2,7 +2,7 @@
   <div class="container-login100">
     <div class="wrap-login100">
       <div class="login100-pic" data-tilt>
-        <img src="../../assets/login/img-01.png" alt="IMG" />
+        <img src="./images/img-01.png" alt="IMG" />
       </div>
 
       <div class="login100-form" id="loginForm">
@@ -62,10 +62,14 @@ export default {
       this.login({
         username: phone,
         password: password
-      }).then(() => {
-        // 重定向对象不存在则返回顶层路径
-        this.$router.replace(this.$route.query.redirect || '/')
       })
+        .then(() => {
+          // 重定向对象不存在则返回顶层路径
+          this.$router.replace(this.$route.query.redirect || '/')
+        })
+        .catch(() => {
+          // 错误情况
+        })
     }
   }
 }

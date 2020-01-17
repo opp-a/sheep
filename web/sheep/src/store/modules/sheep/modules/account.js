@@ -42,7 +42,6 @@ export default {
             resolve()
           })
           .catch(err => {
-            console.log('err: ', err)
             reject(err)
           })
       })
@@ -56,6 +55,7 @@ export default {
       /**
        * @description 注销
        */
+      // eslint-disable-next-line no-unused-vars
       async function logout() {
         // 删除cookie
         util.cookies.remove('token')
@@ -67,25 +67,6 @@ export default {
           name: 'login'
         })
       }
-      // 判断是否需要确认
-      // if (confirm) {
-      //   commit('d2admin/gray/set', true, { root: true })
-      //   MessageBox.confirm('确定要注销当前用户吗', '注销用户', {
-      //     type: 'warning'
-      //   })
-      //     .then(() => {
-      //       commit('d2admin/gray/set', false, { root: true })
-      //       logout()
-      //     })
-      //     .catch(() => {
-      //       commit('d2admin/gray/set', false, { root: true })
-      //       Message({
-      //         message: '取消注销操作'
-      //       })
-      //     })
-      // } else {
-      //   logout()
-      // }
     },
     /**
      * @description 用户登录后从持久化数据加载一系列的设置

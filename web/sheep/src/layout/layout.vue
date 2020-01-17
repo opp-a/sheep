@@ -11,27 +11,21 @@
         text-color="#A0A0A0"
         active-text-color="#51EE48"
       >
-        <el-menu-item index="home"> 首页</el-menu-item>
+        <el-menu-item index="index"> 首页</el-menu-item>
         <el-menu-item index="warehouse">货仓</el-menu-item>
         <el-menu-item index="culture">文化墙</el-menu-item>
         <el-submenu style="text-align: center; float: right;" index="self">
           <template slot="title">{{ info.name ? `你好 ${info.name}` : '未登录' }}</template>
           <el-menu-item index="self" style="text-align: left"> <i class="el-icon-user"></i>个人中心 </el-menu-item>
-          <el-menu-item index="manageShop" style="text-align: left" v-if="isAdmin">
-            <i class="el-icon-s-grid"></i>商品管理
-          </el-menu-item>
-          <el-menu-item index="manageCulture" style="text-align: left" v-if="isAdmin">
-            <i class="el-icon-picture-outline"></i>文化管理
-          </el-menu-item>
-          <el-menu-item index="login" style="text-align: left" @click.native="logOff">
-            <i class="el-icon-top-left"></i> 退出
-          </el-menu-item>
+          <el-menu-item index="manageShop" style="text-align: left" v-if="isAdmin"> <i class="el-icon-s-grid"></i>商品管理 </el-menu-item>
+          <el-menu-item index="manageCulture" style="text-align: left" v-if="isAdmin"> <i class="el-icon-picture-outline"></i>文化管理 </el-menu-item>
+          <el-menu-item index="login" style="text-align: left" @click.native="logOff"> <i class="el-icon-top-left"></i> 退出 </el-menu-item>
         </el-submenu>
       </el-menu>
     </el-header>
 
     <!--    内容区域-->
-    <el-main>
+    <el-main style="margin: 0px; padding: 0px;">
       <router-view />
     </el-main>
 
@@ -75,11 +69,8 @@ export default {
      * @description 导航
      */
     handleSelect(key, keyPath) {
-      console.log(key)
-      console.log('xxx')
-      console.log(keyPath)
       this.activeIndex = key
-      this.$router.push('/' + key)
+      this.$router.push('/home/' + key)
     }
   }
 }

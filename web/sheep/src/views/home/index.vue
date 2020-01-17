@@ -1,95 +1,48 @@
 <template>
-  <div>
+  <div class="contain" ref="wrapper">
     <!--        品牌宣传-->
-    <div style="text-align: center; width: 100%; margin: 0px; padding: 0px;">
-      <video loop muted data-autoplay style="min-width: 100%;">
-        <source src="../../assets/home/brand/hello.mp4" type="video/mp4" />
-      </video>
+    <div style="text-align: center; background-color: black;">
+      <video loop muted autoplay src="./videos/hello.mp4" height="100%" width="100%"></video>
     </div>
     <!--    产品宣传展示-->
-    <div style="margin:0px; padding:0px; min-width: 100%;">
-      <div v-show="showShops" style="position: relative;">
-        <el-row :gutter="20" :style="{position: 'absolute', top: '10%', width: '100%'}">
-          <el-col v-for="(shop, index) in shops" :key="shop.id" :span="8">
-            <div v-if="index <= 2" :class="getRandomAnimate()" style="width: 100%; text-align: center">
-              <img style="max-height: 300px; max-width: 500px" :src="getShopSrc(shop)" />
-            </div>
-          </el-col>
-        </el-row>
-      </div>
-      <div v-show="showShops" style="position: relative;">
-        <el-row :gutter="20" :style="{position: 'absolute', top: '50%', width: '100%'}">
-          <el-col v-for="(shop, index) in shops" :key="shop.id" :span="8">
-            <div v-if="index > 2" :class="getRandomAnimate()" style="width: 100%; text-align: center">
-              <img style="max-height: 300px; max-width: 500px" :src="getShopSrc(shop)" />
-            </div>
-          </el-col>
-        </el-row>
-      </div>
-      <div>
-        <img src="../../assets/warehouse/img1.jpeg" style="min-width:100%; margin: 0px; padding:0px;" />
-      </div>
+    <div id="shops" class="shopsBackground">
+      <grid-layout v-bind="layoutShops" v-show="showShops" style="height: 100%;">
+        <grid-item v-for="(item, index) in layoutShops.layout" :key="index" v-bind="item" style="display: flex;justify-content: center;align-items: center;flex-direction: column;">
+          <div class="animated fadeInLeft slower">
+            <img :src="require('./images/' + item.src)" style=" max-width: 200px;" />
+          </div>
+        </grid-item>
+      </grid-layout>
     </div>
     <!--    公司简介-->
-    <div>
+    <div id="brief" class="briefBackground">
       <div v-show="showBrief" style="position: relative;">
-        <div class="animated lightSpeedIn slower" :style="{position: 'absolute', top: '100px', left: '100px'}">
-          <img style="max-height: 500px; max-width: 900px" :src="require('../../assets/warehouse/layer_0020.png')" />
+        <div style="position: absolute; position: relative;">
+          <div class="animated lightSpeedIn slower" style="position: absolute; top: 60px; left: 8%">
+            <img style="max-height: 500px; max-width: 900px" :src="require('./images/layer_0000.png')" />
+          </div>
+          <div class="animated fadeInUp slower delay-1s" style="position: absolute; top: 300px; left: 50%; width: 33%; min-width: 400px;">
+            <p
+              style="font-size: x-large; font-family: 宋体; color: rgba(176,161,149,0.81); background-color: rgba(68,92,116,0.45); border-radius: 25px; padding: 30px; box-shadow: 10px 10px 5px rgba(48,63,86,0.75)"
+            >
+              华为创立于1987年，是全球领先的ICT（信息与通信）基础设施和智能终端提供商，我们致力于把数字世界带入每个人、每个家庭、每个组织，构建万物互联的智能世界。目前华为有19.4万员工，业务遍及170多个国家和地区，服务30多亿人口。
+              我们在通信网络、IT、智能终端和云服务等领域为客户提供有竞争力、安全可信赖的产品、解决方案与服务，与生态伙伴开放合作，持续为客户创造价值，释放个人潜能，丰富家庭生活，激发组织创新。华为坚持围绕客户需求持续创新，加大基础研究投入，厚积薄发，推动世界进步。
+            </p>
+          </div>
         </div>
-        <div
-          class="animated fadeInUp slower delay-1s"
-          :style="{position: 'absolute', top: '400px', left: '900px', width: '600px'}"
-        >
-          <p
-            style="font-size: x-large; font-family: 宋体; color: rgba(176,161,149,0.81); background-color: rgba(68,92,116,0.45); border-radius: 25px; padding: 30px; box-shadow: 10px 10px 5px rgba(48,63,86,0.75)"
-          >
-            华为创立于1987年，是全球领先的ICT（信息与通信）基础设施和智能终端提供商，我们致力于把数字世界带入每个人、每个家庭、每个组织，构建万物互联的智能世界。目前华为有19.4万员工，业务遍及170多个国家和地区，服务30多亿人口。
-            我们在通信网络、IT、智能终端和云服务等领域为客户提供有竞争力、安全可信赖的产品、解决方案与服务，与生态伙伴开放合作，持续为客户创造价值，释放个人潜能，丰富家庭生活，激发组织创新。华为坚持围绕客户需求持续创新，加大基础研究投入，厚积薄发，推动世界进步。
-          </p>
-        </div>
-      </div>
-      <div style="width: 100%; height: 100%; text-align: center;">
-        <img style="height: 100%; text-align: center" src="../../assets/home/brief.jpg" />
       </div>
     </div>
     <!--    企业文化照片墙-->
     <div>
-      <div class="cultureBackground">
-        <grid-layout
-          style="margin-top: 65px; margin-bottom: 65px; margin-left: 160px; margin-right: 160px; width: 1580px"
-          v-bind="layout"
-        >
-          <grid-item v-for="(gItem, index) in layout.layout" :key="index" v-bind="gItem">
-            <template
-              v-if="gItem.i === '0' || gItem.i === '2' || gItem.i === '6' || gItem.i === '8'"
-              style="width: 100%; height: 100%;"
-            >
-              <grid-layout style="width: 100%; height: 100%;" v-bind="layoutItems">
-                <grid-item v-for="(item, index) in layoutItems.layout" :key="index" v-bind="item">
-                  <div style="text-align: center;">
-                    <img
-                      style="height: 111px;"
-                      :src="require('../../assets/home/culture/' + gItem.title + item.i + '.jpg')"
-                    />
-                  </div>
-                </grid-item>
-              </grid-layout>
-            </template>
-            <template v-else-if="gItem.i === '4'">
-              <grid-layout style="width: 100%; height: 100%;" v-bind="layoutTitles">
-                <grid-item v-for="(item, index) in layoutTitles.layout" :key="index" v-bind="item">
-                  <div style="text-align: center;">
-                    <img style="height: 177px;" :src="item.src" />
-                  </div>
-                </grid-item>
-              </grid-layout>
-            </template>
-            <template v-else>
-              <div style="height: 100%; width: 100%;"></div>
-            </template>
-          </grid-item>
-        </grid-layout>
-      </div>
+      <div id="culture" class="bg bg-blur"></div>
+
+      <grid-layout v-bind="layoutCuture">
+        <grid-item v-for="(item, index) in layoutCuture.layout" :key="index" v-bind="item">
+          <div style="display: flex;justify-content: center;align-items: center;flex-direction: column; height: 100%; width: 100%;">
+            <img :class="item.myclass" :src="require('./images/culture/' + item.src)" style="max-width: 100%; max-height: 100%;" />
+          </div>
+        </grid-item>
+      </grid-layout>
     </div>
     <!--    联系方式-->
     <contact></contact>
@@ -97,147 +50,112 @@
 </template>
 
 <style scoped>
-/*模糊背景*/
-.cultureBackground {
-  /*background*/
-  width: 100%;
-  height: 100%;
-  background: hsla(0, 0%, 60%, 0.5);
-  background-size: cover;
+/*隐藏滚动条*/
+.contain::-webkit-scrollbar {
+  width: 0 !important;
   overflow: hidden;
-  position: relative;
-  margin: 0px;
-  padding: 0px;
+  overflow-x: inherit;
 }
 
-.cultureBackground::before {
-  position: absolute;
-  background: url(../../assets/home/culture/background.jpg);
-  background-size: cover;
-  width: 100%;
+/*商品背景*/
+.shopsBackground {
+  /*background*/
+  min-width: 100%;
+  background: url(./images/bg1.jpeg);
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-position-y: center;
+}
+
+/*简介背景*/
+.briefBackground {
+  /*background*/
+  min-width: 100%;
   height: 100%;
-  content: '';
-  filter: blur(12px);
-  z-index: 0;
-  margin: 0px;
-  padding: 0px;
+  background: url(./images/bg2.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position-x: center;
+  background-position-y: center;
+}
+
+/*文化背景*/
+.bg {
+  background: url(./images/bg3.jpg);
+  /* height:600px; */
+  text-align: center;
+  /* line-height: 600px; */
+}
+.bg-blur {
+  float: left;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  -webkit-filter: blur(15px);
+  -moz-filter: blur(15px);
+  -o-filter: blur(15px);
+  -ms-filter: blur(15px);
+  filter: blur(15px);
 }
 </style>
 
 <script>
 import 'font-awesome/css/font-awesome.min.css'
-import '@/plugins/js/animate.js'
 import VueGridLayout from 'vue-grid-layout'
-import Contact from '../../components/contact/Contact.vue'
+import '@/plugins/js/animate.js'
+import scroll from '@/components/mixins/normal'
+import Contact from './components/contact/Contact.vue'
 
 export default {
+  mixins: [scroll],
   data() {
     return {
       // 货仓 数据
-      shops: [
-        {id: '0000', src: 'layer_0000.png'},
-        {id: '0001', src: 'layer_0001.png'},
-        {id: '0002', src: 'layer_0002.png'},
-        {id: '0006', src: 'layer_0006.png'},
-        {id: '00022', src: 'layer_0022.png'},
-        {id: '00023', src: 'layer_0023.png'}
-      ], // get from api
-      animates: [
-        'bounceIn',
-        'bounceInDown',
-        'bounceInLeft',
-        'bounceInRight',
-        'bounceInUp',
-        'fadeIn',
-        'fadeInDown',
-        'fadeInDownBig',
-        'fadeInLeft',
-        'fadeInLeftBig',
-        'fadeInRight',
-        'fadeInRightBig',
-        'fadeInUp',
-        'fadeInUpBig',
-        'flipInX',
-        'flipInY',
-        'lightSpeedIn',
-        'rotateIn',
-        'rotateInDownLeft',
-        'rotateInDownRight',
-        'rotateInUpLeft',
-        'rotateInUpRight',
-        'hinge',
-        'jackInTheBox',
-        'rollIn',
-        'zoomIn',
-        'zoomInDown',
-        'zoomInLeft',
-        'zoomInRight',
-        'zoomInUp',
-        'slideInDown',
-        'slideInLeft',
-        'slideInRight',
-        'slideInUp'
-      ],
+      layoutShops: {
+        layout: [
+          {x: 1, y: 0, w: 2, h: 1, i: '0', src: 'layer_0000.png'},
+          {x: 5, y: 0, w: 2, h: 1, i: '1', src: 'layer_0001.png'},
+          {x: 9, y: 0, w: 2, h: 1, i: '2', src: 'layer_0002.png'},
+          {x: 1, y: 1, w: 2, h: 1, i: '3', src: 'layer_0006.png'},
+          {x: 5, y: 1, w: 2, h: 1, i: '4', src: 'layer_0022.png'},
+          {x: 9, y: 1, w: 2, h: 1, i: '5', src: 'layer_0023.png'}
+        ],
+        rowHeight: (document.documentElement.clientHeight - 20) / 2,
+        isDraggable: false,
+        isResizable: false,
+        autoSize: false
+      },
       showShops: false,
       // 文化墙
-      layout: {
+      layoutCuture: {
         layout: [
-          {x: 0, y: 0, w: 4, h: 6, i: '0', title: 'attitude'}, // 态度
-          {x: 4, y: 0, w: 6, h: 4, i: '1'}, // 留白
-          {x: 10, y: 0, w: 4, h: 6, i: '2', title: 'quality'}, // 品质
-          {x: 0, y: 4, w: 4, h: 2, i: '3'}, // 留白
-          {x: 4, y: 4, w: 6, h: 6, i: '4'}, // 观点
-          {x: 10, y: 4, w: 4, h: 2, i: '5'}, // 留白
-          {x: 0, y: 10, w: 4, h: 6, i: '6', title: 'details'}, // 细心
-          {x: 4, y: 10, w: 6, h: 4, i: '7'}, // 留白
-          {x: 10, y: 10, w: 4, h: 6, i: '8', title: 'responsibility'} // 责任
+          {x: 0, y: 0, w: 3, h: 1, i: '0', src: 'culture1.jpg', myclass: ['animated', 'bounceInDown']},
+          {x: 3, y: 0, w: 2, h: 1, i: '1', src: 'attitude1.jpg', myclass: ['animated', 'bounceInDown']},
+          {x: 5, y: 0, w: 2, h: 1, i: '2', src: 'attitude2.jpg', myclass: ['animated', 'bounceInDown']},
+          {x: 7, y: 0, w: 2, h: 1, i: '3', src: 'attitude3.jpg', myclass: ['animated', 'bounceInDown']},
+          {x: 9, y: 0, w: 2, h: 1, i: '4', src: 'attitude4.jpg', myclass: ['animated', 'bounceInDown']},
+          {x: 0, y: 1, w: 3, h: 1, i: '5', src: 'culture2.jpg', myclass: ['animated', 'bounceInDown']},
+          {x: 3, y: 1, w: 2, h: 1, i: '6', src: 'quality1.jpg', myclass: ['animated', 'bounceInDown']},
+          {x: 5, y: 1, w: 2, h: 1, i: '7', src: 'quality2.jpg', myclass: ['animated', 'bounceInDown']},
+          {x: 7, y: 1, w: 2, h: 1, i: '8', src: 'quality3.jpg', myclass: ['animated', 'bounceInDown']},
+          {x: 9, y: 1, w: 2, h: 1, i: '9', src: 'quality4.jpg', myclass: ['animated', 'bounceInDown']},
+          {x: 0, y: 2, w: 3, h: 1, i: '10', src: 'culture3.jpg', myclass: ['animated', 'bounceInDown']},
+          {x: 3, y: 2, w: 2, h: 1, i: '11', src: 'details1.jpg', myclass: ['animated', 'bounceInDown']},
+          {x: 5, y: 2, w: 2, h: 1, i: '12', src: 'details2.jpg', myclass: ['animated', 'bounceInDown']},
+          {x: 7, y: 2, w: 2, h: 1, i: '13', src: 'details3.jpg', myclass: ['animated', 'bounceInDown']},
+          {x: 9, y: 2, w: 2, h: 1, i: '14', src: 'details4.jpg', myclass: ['animated', 'bounceInDown']},
+          {x: 0, y: 3, w: 3, h: 1, i: '15', src: 'culture4.jpg', myclass: ['animated', 'bounceInDown']},
+          {x: 3, y: 3, w: 2, h: 1, i: '16', src: 'responsibility1.jpg', myclass: ['animated', 'bounceInDown']},
+          {x: 5, y: 3, w: 2, h: 1, i: '17', src: 'responsibility2.jpg', myclass: ['animated', 'bounceInDown']},
+          {x: 7, y: 3, w: 2, h: 1, i: '18', src: 'responsibility3.jpg', myclass: ['animated', 'bounceInDown']},
+          {x: 9, y: 3, w: 2, h: 1, i: '19', src: 'responsibility4.jpg', myclass: ['animated', 'bounceInDown']}
         ],
-        colNum: 14,
-        maxRows: 14,
-        rowHeight: 60,
+        colNum: 11,
+        rowHeight: (document.documentElement.clientHeight - 50) / 4,
         isDraggable: false,
         isResizable: false,
-        isMirrored: false,
-        autoSize: false,
-        verticalCompact: true,
-        margin: [0, 0],
-        useCssTransforms: true
-      },
-      layoutItems: {
-        layout: [
-          {x: 0, y: 0, w: 1, h: 2, i: '1'},
-          {x: 1, y: 0, w: 1, h: 2, i: '2'},
-          {x: 0, y: 1, w: 1, h: 2, i: '3'},
-          {x: 1, y: 1, w: 1, h: 2, i: '4'}
-        ],
-        colNum: 2,
-        maxRows: 2,
-        rowHeight: 111,
-        isDraggable: false,
-        isResizable: false,
-        isMirrored: false,
-        autoSize: false,
-        verticalCompact: false,
-        margin: [6, 6],
-        useCssTransforms: true
-      },
-      layoutTitles: {
-        layout: [
-          {x: 0, y: 0, w: 1, h: 1, i: '0', src: require('../../assets/home/culture/culture1.jpg')},
-          {x: 1, y: 0, w: 1, h: 1, i: '1', src: require('../../assets/home/culture/culture2.jpg')},
-          {x: 0, y: 1, w: 1, h: 1, i: '2', src: require('../../assets/home/culture/culture3.jpg')},
-          {x: 1, y: 1, w: 1, h: 1, i: '3', src: require('../../assets/home/culture/culture4.jpg')}
-        ],
-        colNum: 2,
-        maxRows: 2,
-        rowHeight: 177,
-        isDraggable: false,
-        isResizable: false,
-        isMirrored: false,
-        autoSize: false,
-        verticalCompact: false,
-        margin: [2, 2],
-        useCssTransforms: true
+        autoSize: false
       },
       // 简介
       showBrief: false
@@ -248,20 +166,40 @@ export default {
     GridItem: VueGridLayout.GridItem,
     Contact: Contact
   },
+  mounted() {
+    // 增加滚动事件监听
+    this.addScrollListener()
+    window.addEventListener('scroll', this.myHandleScroll, true) // 监听（绑定）滚轮滚动事件
+
+    // 设置元素屏高
+    const height = document.documentElement.clientHeight || document.body.clientHeight
+    document.getElementById('shops').style.height = height + 'px'
+    document.getElementById('culture').style.height = height + 'px'
+    document.getElementById('brief').style.height = height + 'px'
+  },
+
   methods: {
-    // element 导航
-    handleSelect(key, keyPath) {
-      this.activeIndex = key
-    },
-    // 自定义
-    getShopSrc: function(shop) {
-      return require('../../assets/warehouse/' + shop.src)
-    },
-    getRandomAnimate: function() {
-      const randomCss = ['animated', 'delay-1s']
-      randomCss.push(this.animates[Math.floor(Math.random() * parseInt(this.animates.length))])
-      return randomCss
+    myHandleScroll: function(event) {
+      const objShops = document.getElementById('shops')
+      if (window.scrollY > objShops.offsetTop - 200 && window.scrollY < objShops.offsetTop + objShops.offsetHeight && this.showShops === false) {
+        this.showShops = true
+      } else if ((window.scrollY > objShops.offsetTop + objShops.offsetHeight || window.scrollY < objShops.offsetTop - objShops.offsetHeight) && this.showShops === true) {
+        this.showShops = false
+      }
+      const objBrief = document.getElementById('brief')
+      if (window.scrollY > objBrief.offsetTop - 200 && window.scrollY < objBrief.offsetTop + objBrief.offsetHeight && this.showBrief === false) {
+        this.showBrief = true
+      } else if ((window.scrollY > objBrief.offsetTop + objBrief.offsetHeight || window.scrollY < objBrief.offsetTop - objBrief.offsetHeight) && this.showBrief === true) {
+        this.showBrief = false
+      }
     }
+  },
+  beforeDestroy() {
+    // 移除滚动事件监听
+    this.removeScrollListener()
+  },
+  destroyed: function() {
+    window.removeEventListener('scroll', this.myHandleScroll) //  离开页面清除（移除）滚轮滚动事件
   }
 }
 </script>

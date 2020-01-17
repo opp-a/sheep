@@ -8,8 +8,8 @@ const cookies = {}
  * @param {String} value cookie value
  * @param {Object} setting cookie setting
  */
-cookies.set = function (name = 'default', value = '', cookieSetting = {}) {
-  let currentCookieSetting = {
+cookies.set = function(name = 'default', value = '', cookieSetting = {}) {
+  const currentCookieSetting = {
     expires: 1
   }
   Object.assign(currentCookieSetting, cookieSetting)
@@ -20,14 +20,14 @@ cookies.set = function (name = 'default', value = '', cookieSetting = {}) {
  * @description 拿到 cookie 值
  * @param {String} name cookie name
  */
-cookies.get = function (name = 'default') {
+cookies.get = function(name = 'default') {
   return Cookies.get(`sheep-${process.env.VUE_APP_VERSION}-${name}`)
 }
 
 /**
  * @description 拿到 cookie 全部的值
  */
-cookies.getAll = function () {
+cookies.getAll = function() {
   return Cookies.get()
 }
 
@@ -35,8 +35,8 @@ cookies.getAll = function () {
  * @description 删除 cookie
  * @param {String} name cookie name
  */
-cookies.remove = function (name = 'default') {
-  return Cookies.remove(`d2admin-${process.env.VUE_APP_VERSION}-${name}`)
+cookies.remove = function(name = 'default') {
+  return Cookies.remove(`sheep-${process.env.VUE_APP_VERSION}-${name}`)
 }
 
 export default cookies

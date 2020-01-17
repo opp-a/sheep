@@ -50,7 +50,7 @@ service.interceptors.request.use(
   },
   error => {
     // 发送失败
-    console.log(error)
+    // console.log(error)
     return Promise.reject(error)
   }
 )
@@ -124,8 +124,7 @@ service.interceptors.response.use(
       }
     }
     errorLog(error)
-    return {name: 'admin', token: 'mytoken'}
-    // return Promise.reject(error)
+    return Promise.reject(error)
   }
 )
 
