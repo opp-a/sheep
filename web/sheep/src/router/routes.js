@@ -25,7 +25,7 @@ const frameIn = [
         name: 'warehouse',
         meta: {
           title: '货仓',
-          auth: true
+          auth: false
         },
         component: _import('warehouse')
       },
@@ -43,28 +43,27 @@ const frameIn = [
         name: 'myorder',
         meta: {
           title: '我的订单',
-          auth: true
+          auth: false
         },
         component: _import('myorder')
       },
-      // 管理
       {
-        path: '/manageShop',
+        path: 'manageShop',
         name: 'manage-shop',
         meta: {
           title: '商品管理',
-          auth: true
+          auth: false
         },
         component: _import('mshop')
       },
       {
-        path: '/manageOrder',
-        name: 'manage-order',
+        path: 'manageCulture',
+        name: 'manage-culture',
         meta: {
-          title: '订单管理',
-          auth: true
+          title: '文化管理',
+          auth: false
         },
-        component: _import('morder')
+        component: _import('mculture')
       }
     ]
   }

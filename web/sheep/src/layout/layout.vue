@@ -3,7 +3,7 @@
     <!--    头 -->
     <el-header>
       <el-menu
-        default-active="home"
+        :default-active="activeIndex"
         mode="horizontal"
         @select="handleSelect"
         style="border-bottom: none;"
@@ -16,10 +16,16 @@
         <el-menu-item index="culture">文化墙</el-menu-item>
         <el-submenu style="text-align: center; float: right;" index="self">
           <template slot="title">{{ info.name ? `你好 ${info.name}` : '未登录' }}</template>
-          <el-menu-item index="self" style="text-align: left"> <i class="el-icon-user"></i>个人中心 </el-menu-item>
-          <el-menu-item index="manageShop" style="text-align: left" v-if="isAdmin"> <i class="el-icon-s-grid"></i>商品管理 </el-menu-item>
-          <el-menu-item index="manageCulture" style="text-align: left" v-if="isAdmin"> <i class="el-icon-picture-outline"></i>文化管理 </el-menu-item>
-          <el-menu-item index="login" style="text-align: left" @click.native="logOff"> <i class="el-icon-top-left"></i> 退出 </el-menu-item>
+          <el-menu-item index="myorder" style="text-align: left"> <i class="el-icon-user"></i>个人中心 </el-menu-item>
+          <el-menu-item index="manageShop" style="text-align: left" v-if="isAdmin">
+            <i class="el-icon-s-grid"></i>商品管理
+          </el-menu-item>
+          <el-menu-item index="manageCulture" style="text-align: left" v-if="isAdmin">
+            <i class="el-icon-picture-outline"></i>文化管理
+          </el-menu-item>
+          <el-menu-item index="login" style="text-align: left" @click.native="logOff">
+            <i class="el-icon-top-left"></i> 退出
+          </el-menu-item>
         </el-submenu>
       </el-menu>
     </el-header>
@@ -44,16 +50,21 @@
 import {mapState, mapActions} from 'vuex'
 export default {
   data() {
-    return {}
+    return {
+      activeIndex: 'home'
+    }
   },
   computed: {
     ...mapState('sheep/user', ['info']),
     isAdmin() {
-      return this.info.name === 'admin'
+      return true
+      // return this.info.name === 'admin'
     }
   },
   mounted() {
     window.addEventListener('unload', this.load())
+    var path = this.$route.path + ''
+    this.activeIndex = path.substring(path.lastIndexOf('/') + 1)
   },
   methods: {
     ...mapActions('sheep/account', ['logout', 'load']),
@@ -70,7 +81,11 @@ export default {
      */
     handleSelect(key, keyPath) {
       this.activeIndex = key
-      this.$router.push('/home/' + key)
+      if (key === 'login') {
+        this.$router.push('/' + key)
+      } else {
+        this.$router.push('/home/' + key)
+      }
     }
   }
 }

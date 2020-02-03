@@ -1,17 +1,14 @@
-// import {Message, MessageBox} from 'element-ui'
-// import util from '@/libs/util.js'
-// import router from '@/router'
 import {NewContact} from '@/api/sys.contact'
 
 export default {
   namespaced: true,
   actions: {
     /**
-     * @description 登录
+     * @description 添加留言
      * @param {Object} context
-     * @param {Object} payload username {String} 用户账号
-     * @param {Object} payload password {String} 密码
-     * @param {Object} payload route {Object} 登录成功后定向的路由对象 任何 vue-router 支持的格式
+     * @param {Object} payload name {String} 客户名称
+     * @param {Object} payload email {String} 客户邮箱
+     * @param {Object} payload content {String} 客户问题
      */
     newContact({dispatch}, {name = '', email = '', service = '留言', content = ''} = {}) {
       return new Promise((resolve, reject) => {

@@ -35,7 +35,6 @@
     <!--    企业文化照片墙-->
     <div>
       <div id="culture" class="bg bg-blur"></div>
-
       <grid-layout v-bind="layoutCuture">
         <grid-item v-for="(item, index) in layoutCuture.layout" :key="index" v-bind="item">
           <div style="display: flex;justify-content: center;align-items: center;flex-direction: column; height: 100%; width: 100%;">

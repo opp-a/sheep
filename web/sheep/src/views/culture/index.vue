@@ -1,33 +1,5 @@
 <template>
-  <el-container>
-    <!--    头 -->
-    <el-header>
-      <el-menu
-        default-active="culture"
-        mode="horizontal"
-        @select="handleSelect"
-        router
-        style="border-bottom: none;"
-        background-color="rgba(255, 255, 255, 0)"
-        text-color="#A0A0A0"
-        active-text-color="#51EE48"
-      >
-        <el-menu-item index="home">首页</el-menu-item>
-        <el-menu-item index="warehouse">货仓</el-menu-item>
-        <el-menu-item index="culture"> 文化墙</el-menu-item>
-        <el-submenu index="self" style="text-align: center; float: right;">
-          <template slot="title">{{ this.$store.state.userName }}</template>
-          <el-menu-item index="self" style="text-align: left"><i class="el-icon-user"></i>个人中心</el-menu-item>
-          <el-menu-item index="manageShop" style="text-align: left" v-if="isSuperAdmin"
-            ><i class="el-icon-s-grid"></i>商品管理
-          </el-menu-item>
-          <el-menu-item index="manageCulture" style="text-align: left" v-if="isSuperAdmin"
-            ><i class="el-icon-picture-outline"></i>文化管理
-          </el-menu-item>
-          <el-menu-item index="login" style="text-align: left"><i class="el-icon-top-left"></i> 退出 </el-menu-item>
-        </el-submenu>
-      </el-menu>
-    </el-header>
+  <div>
     <div style="height: 20px; width: 100%;"></div>
     <el-timeline>
       <el-timeline-item
@@ -51,45 +23,109 @@
     </el-timeline>
     <p v-if="loading" style="text-align: center; color: #8c939d;">加载中...</p>
     <p v-if="noMore" style="text-align: center; color: #8c939d;">没有更多了</p>
-    <!--      尾 -->
-    <el-footer
-      style="color: rgba(100, 100, 100, 0.5);text-align: center;line-height: 60px;width: 100%;
-    background: rgba(53, 73, 94, 0.0);bottom: 0px;"
-      >你是最棒的！ Little Sheep!!!
-    </el-footer>
-  </el-container>
+  </div>
 </template>
 
 <script>
-import {getCulturePictures} from '../../api/culture'
-// import { getShops } from '../../api/getData'
-
+import {GetCulturePictures} from '@/api/sys.culture'
 export default {
   name: 'Culture',
   data() {
     return {
       loading: false,
       noMore: false,
-      culturePictures: []
+      culturePictures: [
+        {
+          time: '2019-12-19',
+          pictures: [
+            {
+              name: 'picture-1',
+              src: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+              time: '2019-12-19'
+            },
+            {
+              name: 'picture-2',
+              src: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+              price: '2019-12-19'
+            },
+            {
+              name: 'picture-3',
+              src: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+              price: '2019-12-19'
+            }
+          ]
+        },
+        {
+          time: '2019-12-17',
+          pictures: [
+            {
+              name: 'picture-4',
+              src: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+              price: '2019-12-17'
+            },
+            {
+              name: 'picture-5',
+              src: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+              price: '2019-12-17'
+            }
+          ]
+        },
+        {
+          time: '2019-12-16',
+          pictures: [
+            {
+              name: 'picture-6',
+              src: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+              price: '2019-12-16'
+            },
+            {
+              name: 'picture-7',
+              src: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+              price: '2019-12-16'
+            },
+            {
+              name: 'picture-8',
+              src: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+              price: '2019-12-16'
+            },
+            {
+              name: 'picture-9',
+              src: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+              price: '2019-12-16'
+            },
+            {
+              name: 'picture-10',
+              src: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+              price: '2019-12-16'
+            },
+            {
+              name: 'picture-11',
+              src: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+              price: '2019-12-16'
+            }
+          ]
+        }
+      ]
     }
   },
   methods: {
-    // element 导航
-    handleSelect(key, keyPath) {
-      this.activeIndex = key
-    },
     getPictures() {
       this.loading = true
       const pageNumber = 12
       const page = this.culturePictures.length / pageNumber + 1
-      setTimeout(() => {
-        const res = getCulturePictures({page: page, pageNumber: pageNumber})
-        this.culturePictures.push.apply(this.culturePictures, res)
-        if (res.length < pageNumber) {
-          this.noMore = true
-        }
-        this.loading = false
-      }, 2000)
+
+      // 获取文化墙的图片
+      GetCulturePictures({page: page, pageNumber: pageNumber})
+        .then(async res => {
+          this.culturePictures.push.apply(this.culturePictures, res)
+          if (res.length < pageNumber) {
+            this.noMore = true
+          }
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
     },
     // 无限加载
     handleScroll() {
