@@ -9,6 +9,7 @@ const frameIn = [
   {
     path: '/home',
     name: 'layout',
+    redirect: {name: 'index'},
     component: layoutHeader,
     children: [
       {

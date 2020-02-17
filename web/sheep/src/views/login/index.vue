@@ -69,6 +69,7 @@ export default {
         })
         .catch(() => {
           // 错误情况
+          this.$router.replace('/login')
         })
     }
   }
