@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import md5 from 'js-md5'
 import 'animate.css'
 import 'font-awesome/css/font-awesome.min.css'
 import {mapActions} from 'vuex'
@@ -61,7 +62,7 @@ export default {
       const password = document.getElementById('password').value
       this.login({
         username: phone,
-        password: password
+        password: md5.hex(password)
       })
         .then(() => {
           // 重定向对象不存在则返回顶层路径
