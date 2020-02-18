@@ -14,8 +14,8 @@ func init() {
 	var err error
 	for trytimes := 3; trytimes > 0; trytimes-- {
 		beego.Info("try connect to sql")
-		// db, err = gorm.Open("postgres", "host=127.0.0.1 port=5432 user=sheep dbname=sheep sslmode=disable password=sheeppwd")
-		db, err = gorm.Open("postgres", "host=127.0.0.1 port=5432 user=sheep dbname=sheep password=sheeppwd sslmode=disable")
+		// db, err = gorm.Open("postgres", "host=127.0.0.1 port=5432 user=root dbname=sheep sslmode=disable password=sheeppwd")
+		db, err = gorm.Open("postgres", "host=127.0.0.1 port=5432 user=root dbname=sheep password=sheeppwd sslmode=disable")
 		if err != nil {
 			beego.Error(err)
 			time.Sleep(time.Second)

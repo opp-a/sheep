@@ -1,4 +1,4 @@
-package commoncontrollers
+package cbase
 
 import (
 	"crypto/md5"
@@ -22,64 +22,46 @@ type BaseController struct {
 // 初始化函数
 func (this *BaseController) Prepare() {
 	controllerName, actionName := this.GetControllerAndAction()
-	this.controllerName = strings.ToLower(controllerName[0 : len(controllerName)-10])
+	this.controllerName = strings.ToLower(controllerName)
 	this.actionName = strings.ToLower(actionName)
 
 	if this.Ctx.Request.Method == http.MethodOptions {
 		this.StopRun()
 	}
 
-	// beego.Debug("---------------request method:", this.Ctx.Request.Method)
-	// beego.Debug("---------------request body:", string(this.Ctx.Input.RequestBody))
-
 	// pass login
-	if controllerName == "AdminController" && actionName == "Login" {
+	if controllerName == "CLogin" && actionName == "Login" {
 		return
 	}
 	if this.Ctx.Input.Header("Authorization") == "" {
 		beego.Error("Authorization is nil")
-		this.ResponseAuth(1001, "Authorization is nil", nil)
+		this.ResponseJson(401, "签名为空", nil)
 		this.StopRun()
 	}
 
 	token := strings.TrimSpace(strings.TrimLeft(this.Ctx.Input.Header("Authorization"), "Bearer"))
 	if token == "" {
 		beego.Error("unknown token:", token)
-		this.ResponseAuth(1001, "unknown token", nil)
+		this.ResponseJson(401, "未知签名", nil)
 		this.StopRun()
 	}
 
 	err := this.TokenAuth(token)
 	if err != nil {
 		beego.Error(err)
-		this.ResponseAuth(1001, err.Error(), nil)
+		this.ResponseJson(401, "无效的签名", nil)
 		this.StopRun()
 	}
 
 }
 
 // 响应json
-func (this *BaseController) ResponseJson(isSuccess bool, msg string, data map[string]interface{}) {
-	status := 1
-	if isSuccess {
-		status = 0
-	}
-	ret := map[string]interface{}{"code": status, "msg": msg}
+func (this *BaseController) ResponseJson(code int, msg string, data map[string]interface{}) {
+	ret := map[string]interface{}{"code": code, "msg": msg}
 	if data != nil {
 		ret["data"] = data
 	} else {
 		ret["data"] = map[string]interface{}{}
-	}
-
-	this.Data["json"] = ret
-	this.ServeJSON()
-}
-
-// 响应json
-func (this *BaseController) ResponseAuth(code int, msg string, data map[string]interface{}) {
-	ret := map[string]interface{}{"code": code, "msg": msg}
-	if data != nil {
-		ret["data"] = data
 	}
 
 	this.Data["json"] = ret
