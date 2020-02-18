@@ -1,18 +1,19 @@
 package routers
 
 import (
-	"sheep/controllers/admincontrollers"
-	"sheep/controllers/homecontrollers"
+	"sheep/controllers/clogin"
 
 	"github.com/astaxie/beego"
 )
 
 //前台路由
 func front() {
-	beego.Router("/", &homecontrollers.IndexController{})
+	// beego.Router("/", &chome.IndexController{})
 }
 
 //后台路由
 func back() {
-	beego.Router("/admin/login", &admincontrollers.AdminController{}, "get,post:Login")
+	// 登录
+	beego.Router("/api/login", &clogin.CLogin{}, "get,post:Login")
+
 }

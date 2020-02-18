@@ -16,18 +16,18 @@ func init() {
 	beego.Info("-----------------------------------------Welcome Little Sheep-----------------------------------------")
 	beego.Info("")
 	//sitemap静态目录
-	beego.SetStaticPath("/static", "static")
+	beego.SetStaticPath("/", "dist")
 	beego.Info("==程序启动完毕==")
 }
 
 func main() {
-	/*
-		if Debug {
-			beego.BConfig.WebConfig.DirectoryIndex = true
-			beego.BConfig.WebConfig.StaticDir["/swagger"] = "swagger"
-		} else {
-			beego.BConfig.Listen.HTTPPort = beego.AppConfig.Int("port")
-		}*/
+
+	// if Debug {
+	// 	beego.BConfig.WebConfig.DirectoryIndex = true
+	// 	beego.BConfig.WebConfig.StaticDir["/swagger"] = "swagger"
+	// } else {
+	// 	beego.BConfig.Listen.HTTPPort = beego.AppConfig.Int("port")
+	// }
 
 	//定义错误和异常处理控制器
 	beego.Run()

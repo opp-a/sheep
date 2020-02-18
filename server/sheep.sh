@@ -46,8 +46,7 @@ fShowStep ()
 
 fBuildGO()
 {
-	git pull
-	
+	git pull	
 	export GOROOT=/home/Y/install/go11/go
 	PROJECT_NAME=sheep
 	PROJECT_MAIN=*.go
@@ -62,12 +61,24 @@ fBuildGO()
 }
 
 
+fBuildUI()
+{
+	rm -rvf dist
+	cd ../web/sheep
+#	git reset --hard
+	git pull
+	npm run build
+
+	mv -f dist ../../server
+	cd ../../server
+}
+
 fPackage()
 {
 	timenow=$(date "+%F")
 	
 	#package
-	tar -zcvf sheep.tar.gz conf static sheep sheep.sh README.md
+	tar -zcvf sheep.tar.gz conf dist sheep sheep.sh
 	tar -zcvf sheep-$timenow.$gVersion.tar.gz sheep.tar.gz sheep.sh
 	rm -rvf sheep.tar.gz
 	
@@ -76,7 +87,7 @@ fPackage()
 	mv *.tar.gz software/
 	cd software/
 	tar -zxvf *.tar.gz
-	./sheep.sh remoteinstall
+	tar -zxvf sheep.tar.gz
 }
 
 fDistributeSshPubKey ()
@@ -175,8 +186,8 @@ fInstall()
 fInstallPGForUbuntuOnline()
 {
 	pgversion=`psql --version`
-	if [ "${pgversion}" = "psql (PostgreSQL) 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)" ]; then
-		printf "psql (PostgreSQL) 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)\n"
+	if [ "${pgversion}" = "psql (PostgreSQL) 9.2.24" ]; then
+		printf "psql (PostgreSQL) 9.2.24\n"
 	else
 		sudo apt-get clean
 		sudo apt-get update
@@ -186,8 +197,27 @@ fInstallPGForUbuntuOnline()
 CREATE USER root WITH SUPERUSER CREATEDB CREATEROLE PASSWORD 'password';
 CREATE DATABASE sheep OWNER root;
 EOF"
-	fi
-	
+	fi	
+}
+
+fInstallPGForCentOSOnline()
+{
+	pgversion=`/usr/pgsql-11/bin/psql --version`
+	if [ "${pgversion}" = "psql (PostgreSQL) 11.7" ]; then
+		printf "psql (PostgreSQL) 11.7\n"
+	else
+		sudo yum install postgresql11-server -y
+		sudo /usr/pgsql-11/bin/postgresql-11-setup initdb
+		sudo systemctl start postgresql-11
+		sudo systemctl enable postgresql-11
+		sudo firewall-cmd --permanent --add-port=5432/tcp  
+		sudo firewall-cmd --permanent --add-port=9001/tcp  
+		sudo firewall-cmd --reload 
+		sudo su - postgres -c "psql << EOF
+CREATE USER root WITH SUPERUSER CREATEDB CREATEROLE PASSWORD 'password';
+CREATE DATABASE sheep OWNER root;
+EOF"
+	fi	
 }
 
 fMain()
@@ -208,10 +238,15 @@ fMain()
 	elif [ "$1" = "package" ];then
 		fBuildGO
 
+		fBuildUI
+
 		fPackage
 
 	elif [ "$1" = "install" ];then
 		fInstall
+
+	elif [ "$1" = "installcentospg" ];then
+		fInstallPGForCentOSOnline
 
 	elif [ "$1" = "installubuntupg" ];then
 		fInstallPGForUbuntuOnline
