@@ -8,7 +8,7 @@
         <div class="inner-content">
           <h1 class="heading">404</h1>
           <p class="subheading">很抱歉，您访问的页面找不到了</p>
-          <p class="dowebok"><a href="/home/index">返回首页</a></p>
+          <p class="dowebok"><a href="/">返回首页</a></p>
         </div>
       </div>
       <div class="right-section">
