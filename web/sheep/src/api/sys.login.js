@@ -3,7 +3,7 @@ import request from '@/plugins/axios'
 export function AccountLogin(data) {
   // return {name: 'admin', token: 'mytoken'}
   return request({
-    url: '/login',
+    url: '/api/login',
     method: 'post',
     data
   })
