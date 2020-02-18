@@ -72,9 +72,13 @@ service.interceptors.response.use(
         case 0:
           // [ 示例 ] code === 0 代表没有错误
           return dataAxios.data
-        case 'xxx':
+        case 401:
           // [ 示例 ] 其它和后台约定的 code
-          errorCreate(`[ code: xxx ] ${dataAxios.msg}: ${response.config.url}`)
+          errorCreate(`[ code: 401 ] ${dataAxios.msg}: ${response.config.url}`)
+          break
+        case 404:
+          // [ 示例 ] 其它和后台约定的 code
+          errorCreate(`[ code: 404 ] ${dataAxios.msg}: ${response.config.url}`)
           break
         default:
           // 不是正确的 code
