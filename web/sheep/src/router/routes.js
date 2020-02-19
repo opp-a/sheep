@@ -74,7 +74,7 @@ const frameIn = [
  * 在主框架之外显示
  */
 const frameIndex = [
-  // 登录
+  // 主页
   {
     path: '/',
     name: 'home',
