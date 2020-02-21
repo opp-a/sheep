@@ -3,7 +3,7 @@ import request from '@/plugins/axios'
 export function GetMShops(data) {
   return request({
     url: '/shop/list',
-    method: 'get',
+    method: 'post',
     data
   })
 }
