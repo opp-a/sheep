@@ -196,7 +196,7 @@ export default {
           this.total = res.total
           this.shops = res.infos
           for (let i = 0; i < length(this.shops); i++) {
-            this.shops[i].addtime = this.$moment(this.shops[i].addtime).format('YYYY-MM-DD HH:mm:ss')
+            this.shops[i].addtime = this.$moment(new Data(this.shops[i].addtime)).format('YYYY-MM-DD HH:mm:ss')
           }
         })
         .catch(() => {})
