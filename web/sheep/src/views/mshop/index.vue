@@ -55,7 +55,7 @@
               ></el-input>
               <span style="font-size: larger;">￥</span>
             </el-form-item>
-            <el-form-item label="新增商品数量" prop="num">
+            <el-form-item label="商品数量" prop="num">
               <el-input-number v-model="ruleForm.num" :min="1" :max="10000"></el-input-number>
             </el-form-item>
             <el-form-item label="商品描述" prop="desc">
@@ -74,7 +74,7 @@
       <el-table-column prop="pricein" label="进货价(￥)" width="180"> </el-table-column>
       <el-table-column prop="priceout" label="出货价(￥)" width="180"> </el-table-column>
       <el-table-column prop="num" label="存货量" width="180"> </el-table-column>
-      <el-table-column prop="describe" label="备注" width="350"> </el-table-column>
+      <el-table-column prop="desc" label="备注" width="350"> </el-table-column>
       <el-table-column prop="addtime" label="上新时间"> </el-table-column>
       <el-table-column fixed="right" label="操作" width="120">
         <template slot-scope="scope">
@@ -195,8 +195,8 @@ export default {
           // this.shops.splice(0, this.shops.lenght)
           this.total = res.total
           this.shops = res.infos
-          for (let i = 0; i < length(this.shops); i++) {
-            this.shops[i].addtime = this.$moment(new Data(this.shops[i].addtime)).format('YYYY-MM-DD HH:mm:ss')
+          for (let i = 0; i < this.shops.length; i++) {
+            this.shops[i].addtime = this.$moment(new Date(this.shops[i].addtime)).format('YYYY-MM-DD HH:mm:ss')
           }
         })
         .catch(() => {})
