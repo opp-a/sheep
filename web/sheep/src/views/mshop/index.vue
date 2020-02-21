@@ -224,7 +224,7 @@ export default {
       this.activeName = 'addOrEditShop'
     },
     listshops() {
-      GetMShops({page: this.pageindex, pageNumber: 20})
+      GetMShops({page: this.pageindex, pagenumber: 20})
         .then(async res => {
           // this.shops.splice(0, this.shops.lenght)
           this.total = res.total
@@ -233,7 +233,7 @@ export default {
         .catch(() => {})
     },
     handleDeleteRow(index, rows) {
-      DeleteMShops({id: rows[index].id})
+      DeleteMShops({shopid: rows[index].id})
       rows.splice(index, 1)
     },
     getSummaries(param) {
@@ -285,7 +285,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           alert('submit!')
-          AddUpdateMShops()
+          AddUpdateMShops(this.ruleForm)
           this.ruleForm.id = ''
         } else {
           console.log('error submit!!')

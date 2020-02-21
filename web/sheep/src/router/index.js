@@ -20,7 +20,7 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.VUE_FRONT_API,
+  base: '/',
   scrollBehavior(to, from, savedPosition) {
     if (to.hash) {
       return {
