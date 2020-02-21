@@ -157,41 +157,7 @@ export default {
       handleDownload(file) {
         console.log(file)
       },
-      shops: [
-        {
-          id: 'xxx',
-          name: '王小虎',
-          pricein: 56,
-          priceout: 80,
-          num: 100,
-          describe: '上海市普陀区金沙江路 1518 弄',
-          addtime: '2016-05-02'
-        },
-        {
-          name: '王小虎',
-          pricein: 56,
-          priceout: 80,
-          num: 100,
-          describe: '上海市普陀区金沙江路 1518 弄',
-          addtime: '2016-05-02'
-        },
-        {
-          name: '王小虎',
-          pricein: 56,
-          priceout: 80,
-          num: 100,
-          describe: '上海市普陀区金沙江路 1518 弄',
-          addtime: '2016-05-02'
-        },
-        {
-          name: '王小虎',
-          pricein: 56,
-          priceout: 80,
-          num: 100,
-          describe: '上海市普陀区金沙江路 1518 弄',
-          addtime: '2016-05-02'
-        }
-      ],
+      shops: [],
       pageindex: 1,
       total: 0
     }
@@ -228,7 +194,10 @@ export default {
         .then(async res => {
           // this.shops.splice(0, this.shops.lenght)
           this.total = res.total
-          this.shops = res
+          this.shops = res.infos
+          for (let i = 0; i < length(this.shops); i++) {
+            this.shops[i].addtime = this.$moment(this.shops[i].addtime).format('YYYY-MM-DD HH:mm:ss')
+          }
         })
         .catch(() => {})
     },

@@ -1,5 +1,6 @@
 // Vue
 import Vue from 'vue'
+import moment from 'moment'
 import App from './App'
 
 // 菜单和路由设置
@@ -12,6 +13,7 @@ import '@/plugins/js/element.js'
 
 // 核心插件
 Vue.use(sheep)
+Vue.prototype.$moment = moment
 
 Vue.config.productionTip = false
 new Vue({
