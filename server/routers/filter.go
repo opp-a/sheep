@@ -2,22 +2,17 @@ package routers
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/context"
+	"github.com/astaxie/beego/plugins/cors"
 )
 
 func init() {
-	var FilterUser = func(ctx *context.Context) {
-		// beego.Info("RemoteAddr:", ctx.Request.RemoteAddr,
-		// 	"Request:", ctx.Request.URL.Path,
-		// 	"Method:", ctx.Request.Method)
-
-		// ctx.Output.Header("Access-Control-Allow-Origin", ctx.Input.Domain())
-		ctx.Output.Header("Access-Control-Allow-Origin", "*")
-		ctx.Output.Header("Access-Control-Allow-Methods", "*")
-
-	}
-
-	beego.InsertFilter("/*", beego.BeforeRouter, FilterUser)
+	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Content-Type"},
+		ExposeHeaders:    []string{"Content-Length", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Content-Type"},
+		AllowCredentials: true,
+	}))
 
 	front()
 	back()

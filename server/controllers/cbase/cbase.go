@@ -4,7 +4,6 @@ import (
 	"crypto/md5"
 	"errors"
 	"fmt"
-	"net/http"
 	"strconv"
 	"strings"
 	"time"
@@ -24,10 +23,6 @@ func (this *BaseController) Prepare() {
 	controllerName, actionName := this.GetControllerAndAction()
 	this.controllerName = strings.ToLower(controllerName)
 	this.actionName = strings.ToLower(actionName)
-
-	if this.Ctx.Request.Method == http.MethodOptions {
-		this.StopRun()
-	}
 
 	// pass login
 	if controllerName == "CLogin" && actionName == "Login" {

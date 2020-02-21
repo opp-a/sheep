@@ -22,6 +22,6 @@ func back() {
 	// shop crud
 	beego.Router("/api/shop/ucreate", &cshopcrud.CShopCRUD{}, "post:UCreateShop")
 	beego.Router("/api/shop/delete", &cshopcrud.CShopCRUD{}, "delete:DeleteShop")
-	beego.Router("/api/shop/list", &cshopcrud.CShopCRUD{}, "get:QueryShops")
+	beego.Router("/api/shop/list", &cshopcrud.CShopCRUD{}, "post:QueryShops")
 
 }

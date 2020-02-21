@@ -9,15 +9,22 @@ import (
 )
 
 type Shop struct {
-	ShopID    string `gorm:"primary_key" form:"shopid" json:"shopid"`
-	Name      string `gorm:"Type:varchar(128);NOT NULL" form:"name" json:"name"` // string默认长度为255
-	Icons     []File `gorm:"ForeignKey:ShopID" form:"icons" json:"icons"`
-	Pricein   uint   `gorm:"not null;default:'0'" form:"pricein" json:"pricein"`
-	Priceout  uint   `gorm:"not null;default:'0'" form:"priceout" json:"priceout"`
-	Num       uint   `gorm:"not null;default:'0'" form:"num" json:"num"`
-	Desc      string `gorm:"Type:varchar(256);not null;default:'its great'" form:"desc" json:"desc"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ShopID    string    `gorm:"primary_key" form:"shopid" json:"shopid"`
+	Name      string    `gorm:"Type:varchar(128);NOT NULL" form:"name" json:"name"` // string默认长度为255
+	Icons     []File    `gorm:"ForeignKey:ShopID" form:"icons" json:"icons"`
+	Pricein   uint      `gorm:"not null;default:'0'" form:"pricein" json:"pricein"`
+	Priceout  uint      `gorm:"not null;default:'0'" form:"priceout" json:"priceout"`
+	Num       uint      `gorm:"not null;default:'0'" form:"num" json:"num"`
+	Desc      string    `gorm:"Type:varchar(256);not null;default:'its great'" form:"desc" json:"desc"`
+	CreatedAt time.Time `json:"addtime"`
+	UpdatedAt time.Time `json:"updatetime"`
+}
+
+func (s *Shop) AfterFind() (err error) {
+	if len(s.Icons) == 0 {
+		s.Icons = make([]File, 0)
+	}
+	return
 }
 
 func AddShop(shops []Shop) error {
@@ -67,12 +74,14 @@ func ListShop(pageindex, pagesize uint) (interface{}, error) {
 	if pageindex == 0 {
 		pageindex = 1
 	}
-	pagesize = (pageindex - 1) * pagesize
-
-	db.Order("created_at desc").Limit(pagesize).Offset(pagesize).Find(&rinfos.Infos)
+	index := (pageindex - 1) * pagesize
 	if err := db.Order("created_at desc").
-		Limit(pagesize).Offset(pagesize).
-		Find(&rinfos.Infos).Count(&rinfos.Total).Error; err != nil {
+		Limit(pagesize).Offset(index).
+		Find(&rinfos.Infos).Error; err != nil {
+		beego.Error("list shop fail! err:", err)
+		return rinfos, err
+	}
+	if err := db.Model(&Shop{}).Count(&rinfos.Total).Error; err != nil {
 		beego.Error("list shop fail! err:", err)
 		return rinfos, err
 	}
