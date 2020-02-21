@@ -39,5 +39,5 @@ func (this *CLogin) Login() {
 		this.ResponseJson(401, "获取签名失败", nil)
 		this.StopRun()
 	}
-	this.ResponseJson(0, "", map[string]interface{}{"token": "Bearer " + token, "name": userinfo.Name})
+	this.ResponseJson(200, "", map[string]interface{}{"token": "Bearer " + token, "name": userinfo.Name})
 }

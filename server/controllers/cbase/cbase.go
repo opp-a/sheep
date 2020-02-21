@@ -56,7 +56,7 @@ func (this *BaseController) Prepare() {
 }
 
 // 响应json
-func (this *BaseController) ResponseJson(code int, msg string, data map[string]interface{}) {
+func (this *BaseController) ResponseJson(code int, msg string, data interface{}) {
 	ret := map[string]interface{}{"code": code, "msg": msg}
 	if data != nil {
 		ret["data"] = data

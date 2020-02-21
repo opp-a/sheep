@@ -27,10 +27,22 @@ func init() {
 		beego.Error(err)
 		panic("connect db fail! msg:" + err.Error())
 	}
-
+	db.DB().SetMaxIdleConns(30)
+	db.DB().SetMaxOpenConns(60)
 	db.SingularTable(true)
 
 	db.AutoMigrate(&User{})
+	db.AutoMigrate(&File{})
+	db.AutoMigrate(&Shop{})
+
+	// tshop := Shop{
+	// 	Name: "iam shop",
+	// 	Icons: []File{
+	// 		{Name: "file1", Content: "xxx1"},
+	// 		{Name: "file2", Content: "xxxxxx1"},
+	// 	},
+	// }
+	// AddShop([]Shop{tshop})
 
 	InitUsers()
 }
