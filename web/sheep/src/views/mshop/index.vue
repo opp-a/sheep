@@ -13,23 +13,18 @@
             <el-form-item label="商品名称" prop="name">
               <el-input v-model="ruleForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="商品封面" prop="delivery">
-              <el-upload action="#" list-type="picture-card" :auto-upload="false">
-                <i slot="default" class="el-icon-plus"></i>
-                <div slot="file" slot-scope="{file}">
-                  <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-                  <span class="el-upload-list__item-actions">
-                    <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
-                      <i class="el-icon-zoom-in"></i>
-                    </span>
-                    <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleDownload(file)">
-                      <i class="el-icon-download"></i>
-                    </span>
-                    <span v-if="!disabled" class="el-upload-list__item-delete" @click="handleRemove(file)">
-                      <i class="el-icon-delete"></i>
-                    </span>
-                  </span>
-                </div>
+            <el-form-item label="商品封面" prop="icons">
+              <el-upload
+                action=""
+                :http-request="httpRequest"
+                list-type="picture-card"
+                :file-list="fileList"
+                :limit="5"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove"
+                :before-upload="handleBeforeUpload"
+              >
+                <i class="el-icon-plus"></i>
               </el-upload>
               <el-dialog :visible.sync="dialogVisible">
                 <img width="100%" :src="dialogImageUrl" alt="" />
@@ -113,10 +108,12 @@ export default {
   name: 'mShop',
   data() {
     return {
+      // 图片预览
       dialogImageUrl: '',
       dialogVisible: false,
-      disabled: false,
+      fileList: [],
 
+      // 表单
       activeName: '',
       ruleForm: {
         id: '',
@@ -132,7 +129,6 @@ export default {
           {required: true, message: '请输入商品名称', trigger: 'blur'},
           {min: 3, max: 5, message: '长度在 3 到 32 个字符', trigger: 'blur'}
         ],
-        icons: [{type: 'array', required: true, message: '请至少选择一个商品封面', trigger: 'change'}],
         pricein: [
           {required: true, message: '进货价格不能为空'},
           {type: 'number', message: '进货价格必须为数字值'}
@@ -147,16 +143,8 @@ export default {
         ],
         desc: [{required: true, message: '请填写备注', trigger: 'blur'}]
       },
-      handleRemove(file) {
-        console.log(file)
-      },
-      handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url
-        this.dialogVisible = true
-      },
-      handleDownload(file) {
-        console.log(file)
-      },
+
+      // 商品列表
       shops: [],
       pageindex: 1,
       total: 0
@@ -183,6 +171,12 @@ export default {
       this.ruleForm.id = rows[index].id
       this.ruleForm.name = rows[index].name
       this.ruleForm.icons = rows[index].icons
+      for (const index in this.ruleForm.icons) {
+        this.fileList.push({
+          name: '',
+          url: this.ruleForm.icons[index]
+        })
+      }
       this.ruleForm.pricein = rows[index].pricein
       this.ruleForm.priceout = rows[index].priceout
       this.ruleForm.num = rows[index].num
@@ -192,17 +186,37 @@ export default {
     listshops() {
       GetMShops({page: this.pageindex, pagenumber: 20})
         .then(async res => {
-          // this.shops.splice(0, this.shops.lenght)
           this.total = res.total
           this.shops = res.infos
           for (let i = 0; i < this.shops.length; i++) {
             this.shops[i].addtime = this.$moment(new Date(this.shops[i].addtime)).format('YYYY-MM-DD HH:mm:ss')
           }
         })
-        .catch(() => {})
+        .catch(err => {
+          if (err.toString().indexOf('[ code: 401 ]') !== -1) {
+            this.$router.replace('/login')
+          } else if (err.toString().indexOf('[ code: 404 ]') !== -1) {
+            this.$router.replace('/404')
+          } else {
+            this.$message.error('未知错误！！！')
+          }
+        })
     },
     handleDeleteRow(index, rows) {
       DeleteMShops({shopid: rows[index].id})
+        .then(async res => {
+          console.log(res)
+          this.listshops()
+        })
+        .catch(err => {
+          if (err.toString().indexOf('[ code: 401 ]') !== -1) {
+            this.$router.replace('/login')
+          } else if (err.toString().indexOf('[ code: 404 ]') !== -1) {
+            this.$router.replace('/404')
+          } else {
+            this.$message.error('未知错误！！！')
+          }
+        })
       rows.splice(index, 1)
     },
     getSummaries(param) {
@@ -253,17 +267,92 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert('submit!')
+          this.ruleForm.icons = []
+          for (const index in this.fileList) {
+            this.ruleForm.icons.push(this.fileList[index].url)
+          }
           AddUpdateMShops(this.ruleForm)
+            .then(async res => {
+              console.log(res)
+              this.$message({message: '成功添加了一条商品记录', type: 'success'})
+              this.listshops()
+            })
+            .catch(err => {
+              console.log(err.toString())
+              if (err.toString().indexOf('[ code: 401 ]') !== -1) {
+                this.$router.replace('/login')
+              } else if (err.toString().indexOf('[ code: 404 ]') !== -1) {
+                this.$router.replace('/404')
+              } else {
+                this.$message.error('未知错误！！！')
+              }
+            })
           this.ruleForm.id = ''
         } else {
-          console.log('error submit!!')
           return false
         }
       })
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+    },
+    // 表单图片
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
+    },
+    handleRemove(file, fileList) {
+      for (const index in this.fileList) {
+        if (this.fileList[index].url === file.url) {
+          this.fileList.splice(index, 1)
+          return
+        }
+      }
+    },
+    handleBeforeUpload(file) {
+      // check file
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传图片大小不能超过 2MB!')
+      }
+      if (isJPG && isLt2M) {
+        return true
+      } else {
+        return false
+      }
+    },
+    httpRequest(options) {
+      var This = this
+      const file = options.file
+      if (file) {
+        var reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = function(e) {
+          This.fileList.push({name: file.name, url: e.target.result})
+        }
+      }
+    },
+    // 备用 将图片base64数据转blob url
+    dataURItoBlob(base64Data) {
+      var byteString
+      if (base64Data.split(',')[0].indexOf('base64') >= 0) byteString = atob(base64Data.split(',')[1])
+      else byteString = unescape(base64Data.split(',')[1])
+      var mimeString = base64Data
+        .split(',')[0]
+        .split(':')[1]
+        .split(';')[0]
+      var ia = new Uint8Array(byteString.length)
+      for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i)
+      }
+      return new Blob([ia], {
+        type: mimeString
+      })
     }
   },
   created() {
