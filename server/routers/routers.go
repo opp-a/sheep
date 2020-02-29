@@ -24,4 +24,6 @@ func back() {
 	beego.Router("/api/shop/delete", &cshopcrud.CShopCRUD{}, "delete:DeleteShop")
 	beego.Router("/api/shop/list", &cshopcrud.CShopCRUD{}, "post:QueryShops")
 
+	// order
+
 }

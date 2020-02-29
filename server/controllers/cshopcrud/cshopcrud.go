@@ -14,15 +14,33 @@ type CShopCRUD struct {
 
 func (this *CShopCRUD) UCreateShop() {
 	shopinfo := models.Shop{}
+	shopparam := struct {
+		ShopID   string   `json:"shopid"`
+		Name     string   `json:"name"` // string默认长度为255
+		Icons    []string `json:"icons"`
+		Pricein  uint     `json:"pricein"`
+		Priceout uint     `json:"priceout"`
+		Num      uint     `json:"num"`
+		Desc     string   `json:"desc"`
+	}{}
 
-	if err := this.ParseForm(&shopinfo); err != nil {
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &shopparam); err != nil {
 		beego.Error(err)
 		this.ResponseJson(400, err.Error(), nil)
 		this.StopRun()
 	}
-
-	beego.Debug(shopinfo)
-
+	shopinfo.ShopID = shopparam.ShopID
+	shopinfo.Name = shopparam.Name
+	shopinfo.Icons = make([]models.File, 0)
+	for _, icon := range shopparam.Icons {
+		file := models.File{}
+		file.Content = icon
+		shopinfo.Icons = append(shopinfo.Icons, file)
+	}
+	shopinfo.Pricein = shopparam.Pricein
+	shopinfo.Priceout = shopparam.Priceout
+	shopinfo.Num = shopparam.Num
+	shopinfo.Desc = shopparam.Desc
 	if shopinfo.ShopID == "" {
 		if err := models.AddShop([]models.Shop{shopinfo}); err != nil {
 			beego.Error(err)
@@ -76,8 +94,6 @@ func (this *CShopCRUD) QueryShops() {
 		this.ResponseJson(400, err.Error(), nil)
 		this.StopRun()
 	}
-
-	beego.Debug(pageinfo)
 
 	if rinfos, err := models.ListShop(pageinfo.PageIndex, pageinfo.PageSize); err != nil {
 		beego.Error(err)

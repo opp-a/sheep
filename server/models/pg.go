@@ -30,19 +30,9 @@ func init() {
 	db.DB().SetMaxIdleConns(30)
 	db.DB().SetMaxOpenConns(60)
 	db.SingularTable(true)
-
-	db.AutoMigrate(&User{})
-	db.AutoMigrate(&File{})
-	db.AutoMigrate(&Shop{})
-
-	// tshop := Shop{
-	// 	Name: "iam shop",
-	// 	Icons: []File{
-	// 		{Name: "file1", Content: "xxx1"},
-	// 		{Name: "file2", Content: "xxxxxx1"},
-	// 	},
-	// }
-	// AddShop([]Shop{tshop})
-
+	db.AutoMigrate(&User{}, &File{}, &Shop{})
+	// AutoMigrate 会忽略外键，需手动添加
+	// 参数分别为模型外键，关联表主键，删除级联，修改级联
+	// db.Model(&File{}).AddForeignKey("shopid", "shop(shop_id)", "RESTRICT", "RESTRICT")
 	InitUsers()
 }

@@ -35,7 +35,6 @@ func AddShop(shops []Shop) error {
 	for _, shop := range shops {
 		uid, _ := ksuid.NewRandomWithTime(time.Now())
 		shop.ShopID = uid.String()
-
 		if err = db.Save(&shop).Error; err != nil {
 			beego.Error("add shop fail! err:", err)
 		}
@@ -67,19 +66,52 @@ func UpdateShop(shopid string, shop Shop) error {
 }
 
 func ListShop(pageindex, pagesize uint) (interface{}, error) {
+	type FrontShop struct {
+		ShopID    string    `json:"shopid"`
+		Name      string    `json:"name"` // string默认长度为255
+		Icons     []string  `json:"icons"`
+		Pricein   uint      `json:"pricein"`
+		Priceout  uint      `json:"priceout"`
+		Num       uint      `json:"num"`
+		Desc      string    `json:"desc"`
+		CreatedAt time.Time `json:"addtime"`
+	}
 	rinfos := struct {
-		Total int    `json:"total"`
-		Infos []Shop `json:"infos"`
-	}{0, make([]Shop, 0)}
+		Total int         `json:"total"`
+		Infos []FrontShop `json:"infos"`
+	}{0, make([]FrontShop, 0)}
 	if pageindex == 0 {
 		pageindex = 1
 	}
 	index := (pageindex - 1) * pagesize
+
+	var shops []Shop = make([]Shop, 0)
 	if err := db.Order("created_at desc").
 		Limit(pagesize).Offset(index).
-		Find(&rinfos.Infos).Error; err != nil {
+		Find(&shops).Error; err != nil {
 		beego.Error("list shop fail! err:", err)
 		return rinfos, err
+	}
+	// fill file
+	for index, shop := range shops {
+		rinfos.Infos = append(rinfos.Infos, FrontShop{
+			ShopID:    shop.ShopID,
+			Name:      shop.Name,
+			Icons:     make([]string, 0),
+			Pricein:   shop.Pricein,
+			Priceout:  shop.Priceout,
+			Num:       shop.Num,
+			Desc:      shop.Desc,
+			CreatedAt: shop.CreatedAt})
+
+		var files []File = make([]File, 0)
+		if err := db.Model(&shop).Related(&files, "Icons").Error; err != nil {
+			beego.Error("association file fail! err:", err)
+			return rinfos, err
+		}
+		for _, file := range files {
+			rinfos.Infos[index].Icons = append(rinfos.Infos[index].Icons, file.Content)
+		}
 	}
 	if err := db.Model(&Shop{}).Count(&rinfos.Total).Error; err != nil {
 		beego.Error("list shop fail! err:", err)
