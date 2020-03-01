@@ -46,7 +46,7 @@ func DeleteShop(shopids []string) error {
 	if len(shopids) <= 0 {
 		return nil
 	}
-	if err := db.Delete(&Shop{}, "shop_id in (?)", shopids).Error; err != nil {
+	if err := db.Unscoped().Delete(&Shop{}, "shop_id in (?)", shopids).Error; err != nil {
 		beego.Error("delete shop fail! err:", err)
 		return err
 	}
@@ -57,8 +57,10 @@ func UpdateShop(shopid string, shop Shop) error {
 	if shopid == "" {
 		return nil
 	}
+	shop.ShopID = shopid
 
-	if err := db.Update(&shop, "shop_id = ?", shopid).Error; err != nil {
+	beego.Debug(shop.Desc)
+	if err := db.Save(&shop).Error; err != nil {
 		beego.Error("update shop fail! err:", err)
 		return err
 	}
