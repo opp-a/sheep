@@ -7,8 +7,8 @@
         </template>
         <el-card shadow="never" style="width: 100%; text-align: left;">
           <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item v-show="false" label="商品ID" prop="id">
-              <el-input v-model="ruleForm.id"></el-input>
+            <el-form-item v-show="true" label="商品ID" prop="shopid">
+              <el-input v-model="ruleForm.shopid" :disabled="true"></el-input>
             </el-form-item>
             <el-form-item label="商品名称" prop="name">
               <el-input v-model="ruleForm.name"></el-input>
@@ -65,6 +65,7 @@
       </el-collapse-item>
     </el-collapse>
     <el-table :data="shops" :summary-method="getSummaries" border show-summary stripe style="width: 100%;">
+      <el-table-column prop="shopid" label="商品ID" width="0"> </el-table-column>
       <el-table-column prop="name" label="名称" width="230"> </el-table-column>
       <el-table-column prop="pricein" label="进货价(￥)" width="180"> </el-table-column>
       <el-table-column prop="priceout" label="出货价(￥)" width="180"> </el-table-column>
@@ -116,7 +117,7 @@ export default {
       // 表单
       activeName: '',
       ruleForm: {
-        id: '',
+        shopid: '',
         name: '',
         icons: [],
         pricein: 0,
@@ -127,7 +128,7 @@ export default {
       rules: {
         name: [
           {required: true, message: '请输入商品名称', trigger: 'blur'},
-          {min: 3, max: 5, message: '长度在 3 到 32 个字符', trigger: 'blur'}
+          {min: 3, max: 64, message: '长度在 3 到 64 个字符', trigger: 'blur'}
         ],
         pricein: [
           {required: true, message: '进货价格不能为空'},
@@ -152,7 +153,7 @@ export default {
   },
   computed: {
     addOredit: function() {
-      if (this.ruleForm.id === undefined || this.ruleForm.id === '') {
+      if (this.ruleForm.shopid === undefined || this.ruleForm.shopid === '') {
         return '新增商品'
       } else {
         return '编辑商品'
@@ -168,7 +169,7 @@ export default {
 
     // 表格
     handleEditShop: function(index, rows) {
-      this.ruleForm.id = rows[index].id
+      this.ruleForm.shopid = rows[index].shopid
       this.ruleForm.name = rows[index].name
       this.ruleForm.icons = rows[index].icons
       for (const index in this.ruleForm.icons) {
@@ -203,10 +204,9 @@ export default {
         })
     },
     handleDeleteRow(index, rows) {
-      DeleteMShops({shopid: rows[index].id})
+      DeleteMShops({shopid: rows[index].shopid})
         .then(async res => {
-          console.log(res)
-          this.listshops()
+          this.$message({message: '成功删除了一条商品记录', type: 'success'})
         })
         .catch(err => {
           if (err.toString().indexOf('[ code: 401 ]') !== -1) {
@@ -225,7 +225,7 @@ export default {
       columns.forEach((column, index) => {
         if (index === 0) {
           sums[index] = '合计'
-        } else if (index === 1 || index === 2) {
+        } else if (index === 2 || index === 3) {
           const values = data.map(item => Number(item[column.property]))
           if (!values.every(value => isNaN(value))) {
             sums[index] = values.reduce((prev, curr, currindex) => {
@@ -273,9 +273,22 @@ export default {
           }
           AddUpdateMShops(this.ruleForm)
             .then(async res => {
-              console.log(res)
-              this.$message({message: '成功添加了一条商品记录', type: 'success'})
+              if (this.addOredit === '新增商品') {
+                this.$message({message: '成功添加了一条商品记录', type: 'success'})
+              } else {
+                this.$message({message: '成功修改了一条商品记录', type: 'success'})
+              }
               this.listshops()
+
+              this.ruleForm.shopid = ''
+              this.ruleForm.name = ''
+              this.ruleForm.icons = []
+              this.ruleForm.pricein = 0
+              this.ruleForm.priceout = 0
+              this.ruleForm.num = 1
+              this.ruleForm.desc = ''
+              this.fileList = []
+              this.activeName = ''
             })
             .catch(err => {
               console.log(err.toString())
@@ -287,7 +300,6 @@ export default {
                 this.$message.error('未知错误！！！')
               }
             })
-          this.ruleForm.id = ''
         } else {
           return false
         }
@@ -295,6 +307,8 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+      this.fileList = []
+      this.activeName = ''
     },
     // 表单图片
     handlePictureCardPreview(file) {
