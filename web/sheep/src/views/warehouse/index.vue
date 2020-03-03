@@ -24,10 +24,10 @@
               购物车
             </div>
             <el-table :data="shoppingCar" style="width: 100%" max-height="600">
-              <el-table-column fixed prop="name" label="商品" width="105px"></el-table-column>
-              <el-table-column fixed label="价格" width="60px">
+              <el-table-column fixed prop="name" label="商品" width="115px"></el-table-column>
+              <el-table-column fixed label="价格" width="80px">
                 <template slot-scope="scope"
-                  ><p style="color:#f24a4a">{{ scope.row.price }}￥</p></template
+                  ><p style="color:#f24a4a">{{ scope.row.priceout }}￥</p></template
                 >
               </el-table-column>
               <el-table-column fixed label="数量" width="140">
@@ -67,20 +67,20 @@
     <!--      商品列表-->
     <div style="overflow:auto;">
       <el-row v-for="row in shopRows" :key="row">
-        <el-col :span="4" v-for="(o, index) in 4" :key="o" :offset="index > 0 ? 2 : 1">
+        <el-col :span="4" v-for="(o, index) in showrowsize(row)" :key="o" :offset="index > 0 ? 2 : 1">
           <el-card :body-style="{padding: '0px'}">
             <el-image
-              src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+              :src="shops[(row - 1) * 4 + index].icons[0]"
               style="width: 100%; display: block; box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);"
             ></el-image>
             <div style="padding: 14px;">
               <el-row>
                 <el-col :span="12"
-                  ><span>{{ shops[(row - 1) * 4 + index].shopName }}</span></el-col
+                  ><span>{{ shops[(row - 1) * 4 + index].name }}</span></el-col
                 >
                 <el-col :span="12" style="text-align: right;"
                   ><span style="width:100%; text-align: right; font-size: x-large; color: #f02e29;"
-                    >{{ shops[(row - 1) * 4 + index].price }}￥</span
+                    >{{ shops[(row - 1) * 4 + index].priceout }}￥</span
                   >
                 </el-col>
               </el-row>
@@ -125,7 +125,8 @@ export default {
       noMore: false,
       shops: [],
       drawer: false,
-      shoppingCar: []
+      shoppingCar: [],
+      carorder: {}
     }
   },
   computed: {
@@ -151,7 +152,7 @@ export default {
     totalPrice() {
       let total = 0
       for (let index = 0; index < this.shoppingCar.length; index++) {
-        total += this.shoppingCar[index].price * this.shoppingCar[index].num
+        total += this.shoppingCar[index].priceout * this.shoppingCar[index].num
       }
       return total
     }
@@ -161,6 +162,15 @@ export default {
   },
   methods: {
     // 无限加载
+    showrowsize: function(row) {
+      console.log(this.shops[0].icons[0])
+      const rowNumber = 4
+      if (row * rowNumber > this.shops.length) {
+        return this.shops.length % rowNumber
+      } else {
+        return rowNumber
+      }
+    },
     handleScroll() {
       // 变量windowHeight是可视区的高度
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
@@ -175,45 +185,61 @@ export default {
     },
     load: function() {
       this.loading = true
-      const pageNumber = 12
+      const pageNumber = 19
       const page = this.shops.length / pageNumber + 1
       // 开始请求获取商品
       GetShops({page: page, pageNumber: pageNumber})
         .then(async res => {
-          this.shops.push.apply(this.shops, res)
-          if (res.length < pageNumber) {
+          this.shops.push.apply(this.shops, res.infos)
+          if (res.infos.length < pageNumber) {
             this.noMore = true
           }
           this.loading = false
         })
-        .catch(() => {
+        .catch(err => {
           this.loading = false
+          if (err.toString().indexOf('[ code: 401 ]') !== -1) {
+            this.$router.replace('/login')
+          } else if (err.toString().indexOf('[ code: 404 ]') !== -1) {
+            this.$router.replace('/404')
+          } else {
+            this.$message.error('未知错误！！！')
+          }
         })
     },
     // 购物车
     getShoppingCar() {
-      return new Promise((resolve, reject) => {
-        GetCar()
-          .then(async res => {
-            this.shoppingCar.splice(0, this.shoppingCar.length)
-            this.shoppingCar = res
-            resolve()
-          })
-          .catch(err => {
-            reject(err)
-          })
-      })
+      GetCar()
+        .then(async res => {
+          this.shoppingCar = res.myshops
+          this.carorder = {orderid: res.orderid, pricetotal: res.pricetotal, addtime: res.addtime, myshops: []}
+        })
+        .catch(err => {
+          if (err.toString().indexOf('[ code: 401 ]') !== -1) {
+            this.$router.replace('/login')
+          } else if (err.toString().indexOf('[ code: 404 ]') !== -1) {
+            this.$router.replace('/404')
+          } else {
+            this.$message.error('未知错误！！！')
+          }
+        })
     },
     addShopToCar(shop) {
       let exist = false
       for (let index = 0; index < this.shoppingCar.length; index++) {
-        if (shop.shopName === this.shoppingCar[index].name) {
+        if (shop.name === this.shoppingCar[index].name) {
           this.shoppingCar[index].num++
           exist = true
         }
       }
       if (!exist) {
-        this.shoppingCar.push({name: shop.shopName, price: shop.price, num: 1})
+        this.shoppingCar.push({
+          shopid: shop.shopid,
+          name: shop.name,
+          priceout: shop.priceout,
+          num: 1,
+          cover: shop.icons[0] || ''
+        })
       }
     },
     editShoppingCar(index, row) {
@@ -222,7 +248,6 @@ export default {
           this.shoppingCar.splice(index, 1)
         }, 5)
       }
-      // console.log(index, row)
     },
     pay() {
       this.$confirm('确定要支付吗？', '提示', {
@@ -232,7 +257,9 @@ export default {
       })
         .then(() => {
           // 支付购物车
-          DoOrder(this.shoppingCar)
+          this.carorder.myshops = this.shoppingCar
+          this.carorder.pricetotal = this.totalPrice
+          DoOrder(this.carorder)
             .then(async res => {
               this.getShoppingCar()
               this.$message({
@@ -241,7 +268,13 @@ export default {
               })
             })
             .catch(err => {
-              this.$message({type: 'error', message: err})
+              if (err.toString().indexOf('[ code: 401 ]') !== -1) {
+                this.$router.replace('/login')
+              } else if (err.toString().indexOf('[ code: 404 ]') !== -1) {
+                this.$router.replace('/404')
+              } else {
+                this.$message.error('未知错误！！！')
+              }
             })
         })
         .catch(() => {
@@ -258,15 +291,21 @@ export default {
   },
   beforeDestroy() {
     // 保存购物车的数据
-    // return new Promise((resolve, reject) => {
-    SaveOrder(this.shoppingCar)
-    // .then(async res => {
-    // resolve()
-    // })
-    // .catch(err => {
-    // reject(err)
-    // })
-    // })
+    this.carorder.myshops = this.shoppingCar
+    this.carorder.pricetotal = this.totalPrice
+    SaveOrder(this.carorder)
+      .then(async res => {
+        this.$message({type: 'info', message: '购物车已保存!'})
+      })
+      .catch(err => {
+        if (err.toString().indexOf('[ code: 401 ]') !== -1) {
+          this.$router.replace('/login')
+        } else if (err.toString().indexOf('[ code: 404 ]') !== -1) {
+          this.$router.replace('/404')
+        } else {
+          this.$message.error('未知错误！！！')
+        }
+      })
   }
 }
 </script>

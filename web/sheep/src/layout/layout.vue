@@ -57,8 +57,7 @@ export default {
   computed: {
     ...mapState('sheep/user', ['info']),
     isAdmin() {
-      return true
-      // return this.info.name === 'admin'
+      return this.info.name === 'admin'
     }
   },
   mounted() {
