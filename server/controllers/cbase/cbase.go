@@ -16,6 +16,7 @@ type BaseController struct {
 	beego.Controller
 	controllerName string
 	actionName     string
+	UserName       string
 }
 
 // 初始化函数
@@ -116,7 +117,7 @@ func (this *BaseController) TokenAuth(tokenstring string) error {
 
 	if claims, ok := token.Claims.(*Claims); ok && token.Valid && claims != nil {
 		// succees
-		this.Ctx.SetCookie("name", claims.Subject)
+		this.UserName = claims.Subject
 		return nil
 	} else {
 		return errors.New("Token Unauthorized")

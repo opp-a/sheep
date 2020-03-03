@@ -67,7 +67,8 @@ func UpdateShop(shopid string, shop Shop) error {
 	return nil
 }
 
-func ListShop(pageindex, pagesize uint) (interface{}, error) {
+func ListShop(username string, pageindex, pagesize uint) (interface{}, error) {
+
 	type FrontShop struct {
 		ShopID    string    `json:"shopid"`
 		Name      string    `json:"name"` // string默认长度为255
@@ -96,6 +97,9 @@ func ListShop(pageindex, pagesize uint) (interface{}, error) {
 	}
 	// fill file
 	for index, shop := range shops {
+		if username != beego.AppConfig.String("Admin") {
+			shop.Pricein = shop.Priceout
+		}
 		rinfos.Infos = append(rinfos.Infos, FrontShop{
 			ShopID:    shop.ShopID,
 			Name:      shop.Name,

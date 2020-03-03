@@ -3,6 +3,7 @@ package routers
 import (
 	"sheep/controllers/chome"
 	"sheep/controllers/clogin"
+	"sheep/controllers/cordercrud"
 	"sheep/controllers/cshopcrud"
 
 	"github.com/astaxie/beego"
@@ -25,5 +26,9 @@ func back() {
 	beego.Router("/api/shop/list", &cshopcrud.CShopCRUD{}, "post:QueryShops")
 
 	// order
+	beego.Router("/api/car/get", &cordercrud.COrderCRUD{}, "get:GetCar")
+	beego.Router("/api/car/pay", &cordercrud.COrderCRUD{}, "post:PayOrder")
+	beego.Router("/api/car/modify", &cordercrud.COrderCRUD{}, "post:ModifyCar")
+	beego.Router("/api/historyorder/list", &cordercrud.COrderCRUD{}, "post:QueryHistoryOrders")
 
 }

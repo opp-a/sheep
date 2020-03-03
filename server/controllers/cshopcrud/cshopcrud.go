@@ -13,6 +13,11 @@ type CShopCRUD struct {
 }
 
 func (this *CShopCRUD) UCreateShop() {
+	if this.UserName != beego.AppConfig.String("Admin") {
+		beego.Error("this user be not permitted!")
+		this.ResponseJson(416, "you are not permitted!", nil)
+		this.StopRun()
+	}
 	shopinfo := models.Shop{}
 	shopparam := struct {
 		ShopID   string   `json:"shopid"`
@@ -58,6 +63,11 @@ func (this *CShopCRUD) UCreateShop() {
 }
 
 func (this *CShopCRUD) DeleteShop() {
+	if this.UserName != beego.AppConfig.String("Admin") {
+		beego.Error("this user be not permitted!")
+		this.ResponseJson(416, "you are not permitted!", nil)
+		this.StopRun()
+	}
 	shopid := struct {
 		ShopID string `json:"shopid"`
 	}{}
@@ -95,7 +105,7 @@ func (this *CShopCRUD) QueryShops() {
 		this.StopRun()
 	}
 
-	if rinfos, err := models.ListShop(pageinfo.PageIndex, pageinfo.PageSize); err != nil {
+	if rinfos, err := models.ListShop(this.UserName, pageinfo.PageIndex, pageinfo.PageSize); err != nil {
 		beego.Error(err)
 		this.ResponseJson(500, err.Error(), nil)
 		this.StopRun()

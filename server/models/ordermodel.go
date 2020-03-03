@@ -1,10 +1,11 @@
 package models
 
 import (
-	// "errors"
+	"encoding/json"
 	"time"
-	// "github.com/astaxie/beego"
-	// "github.com/segmentio/ksuid"
+
+	"github.com/astaxie/beego"
+	"github.com/segmentio/ksuid"
 )
 
 const (
@@ -13,17 +14,227 @@ const (
 )
 
 type Order struct {
-	OrderID    string      `gorm:"primary_key" form:"orderid" json:"orderid"`
-	OrderType  uint        `form:"name" json:"name"` // string默认长度为255
-	Myshops    []OrderShop `gorm:"ForeignKey:ShopID" form:"icons" json:"icons"`
-	PriceTotal uint        `gorm:"not null;default:'0'" form:"pricein" json:"pricein"`
-	CreatedAt  time.Time   `json:"addtime"`
-	UpdatedAt  time.Time   `json:"updatetime"`
+	OrderID    string    `gorm:"primary_key" form:"orderid" json:"orderid"`
+	UserName   string    `gorm:"Type:varchar(255);not null;" form:"username" json:"username"`
+	OrderType  uint      `form:"ordertype" json:"ordertype"`
+	ShopIDs    string    `gorm:"Type:varchar(2048);not null;default:'[]'" form:"shopids" json:"shopids"`
+	PriceTotal uint      `gorm:"not null;default:'0'" form:"pricetotal" json:"pricetotal"`
+	CreatedAt  time.Time `json:"addtime"`
+	UpdatedAt  time.Time `json:"updatetime"`
 }
-type OrderShop struct {
-	ShopID   string `gorm:"primary_key" form:"shopid" json:"shopid"`
-	Name     string `gorm:"Type:varchar(128);NOT NULL" form:"name" json:"name"` // string默认长度为255
-	Icons    []File `gorm:"ForeignKey:ShopID" form:"icons" json:"icons"`
-	Priceout uint   `gorm:"not null;default:'0'" form:"priceout" json:"priceout"`
-	Num      uint   `gorm:"not null;default:'0'" form:"num" json:"num"`
+
+func GetShoppingCar(username string) (interface{}, error) {
+	type FrontOrderShop struct {
+		ShopID   string `json:"shopid"`
+		Name     string `json:"name"`
+		Cover    string `json:"cover"`
+		Priceout uint   `json:"priceout"`
+		Num      uint   `json:"num"`
+	}
+	type FrontOrder struct {
+		OrderID    string           `json:"orderid"`
+		Myshops    []FrontOrderShop `json:"myshops"`
+		PriceTotal uint             `json:"pricetotal"`
+		CreatedAt  time.Time        `json:"addtime"`
+	}
+	var rcar FrontOrder
+
+	var count int
+	if err := db.Model(&Order{}).Where("order_type = ? AND user_name = ?", OrderTypeForPay, username).
+		Count(&count).Error; err != nil {
+		beego.Error(err)
+		return rcar, err
+	}
+
+	var order Order
+	if count <= 0 {
+		uid, _ := ksuid.NewRandomWithTime(time.Now())
+		if err := db.FirstOrCreate(&order, Order{
+			OrderID:   uid.String(),
+			OrderType: OrderTypeForPay,
+			UserName:  username}).Error; err != nil {
+			beego.Error("get and init shopping car fail! err:", err)
+			return rcar, err
+		}
+	} else {
+		if err := db.Where("order_type = ? AND user_name = ?", OrderTypeForPay, username).
+			First(&order).Error; err != nil {
+			beego.Error("get shopping car fail! err:", err)
+			return rcar, err
+		}
+	}
+
+	rcar.OrderID = order.OrderID
+	rcar.CreatedAt = order.CreatedAt
+	rcar.PriceTotal = 0
+	rcar.Myshops = make([]FrontOrderShop, 0)
+
+	// fill my shops
+	type CarShop struct {
+		ShopID string `json:"shopid"`
+		Num    uint   `json:"num"`
+	}
+	carshops := make([]CarShop, 0)
+	if err := json.Unmarshal([]byte(order.ShopIDs), &carshops); err != nil {
+		beego.Error("Unmarshal shopping car shop fail! err:", err)
+		return rcar, err
+	}
+	for _, carshop := range carshops {
+		// get shop
+		var shop Shop
+		if err := db.First(&shop, "shop_id = ?", carshop.ShopID).Error; err != nil {
+			beego.Error("get shop fail! err:", err)
+			return rcar, err
+		}
+		var cover string
+		if len(shop.Icons) > 0 {
+			cover = shop.Icons[0].Content
+		}
+		rcar.PriceTotal = rcar.PriceTotal + carshop.Num*shop.Priceout
+		rcar.Myshops = append(rcar.Myshops, FrontOrderShop{
+			ShopID:   shop.ShopID,
+			Name:     shop.Name,
+			Cover:    cover,
+			Priceout: shop.Priceout,
+			Num:      carshop.Num})
+	}
+
+	return rcar, nil
+}
+
+func ListHistoryOrder(username string, pageindex, pagesize uint) (interface{}, error) {
+	type FrontOrderShop struct {
+		ShopID   string `json:"shopid"`
+		Name     string `json:"name"`
+		Cover    string `json:"cover"`
+		Priceout uint   `json:"priceout"`
+		Num      uint   `json:"num"`
+	}
+	type FrontOrder struct {
+		OrderID    string           `json:"orderid"`
+		Myshops    []FrontOrderShop `json:"myshops"`
+		PriceTotal uint             `json:"pricetotal"`
+		CreatedAt  time.Time        `json:"addtime"`
+	}
+
+	rinfos := struct {
+		Total int          `json:"total"`
+		Infos []FrontOrder `json:"infos"`
+	}{0, make([]FrontOrder, 0)}
+	if pageindex == 0 {
+		pageindex = 1
+	}
+	if pagesize == 0 {
+		pagesize = 20
+	}
+	index := (pageindex - 1) * pagesize
+
+	var orders []Order = make([]Order, 0)
+	if err := db.Where("order_type = ? AND user_name = ?", OrderTypeForHistory, username).
+		Order("created_at desc").
+		Limit(pagesize).Offset(index).
+		Find(&orders).Error; err != nil {
+		beego.Error("list history order fail! err:", err)
+		return rinfos, err
+	}
+
+	for _, order := range orders {
+		frontorder := FrontOrder{
+			OrderID:    order.OrderID,
+			Myshops:    make([]FrontOrderShop, 0),
+			PriceTotal: 0,
+			CreatedAt:  order.CreatedAt}
+
+		// fill my shops
+		type HistoryOrderShop struct {
+			ShopID string `json:"shopid"`
+			Num    uint   `json:"num"`
+		}
+		ordershops := make([]HistoryOrderShop, 0)
+		if err := json.Unmarshal([]byte(order.ShopIDs), &ordershops); err != nil {
+			beego.Error("Unmarshal histroy shops fail! err:", err)
+			return rinfos, err
+		}
+		for _, ordershop := range ordershops {
+			// get shop
+			var shop Shop
+			if err := db.First(&shop, "shopid = ?", ordershop.ShopID).Error; err != nil {
+				beego.Error("get shop fail! err:", err)
+				return rinfos, err
+			}
+			var cover string
+			if len(shop.Icons) > 0 {
+				cover = shop.Icons[0].Content
+			}
+			frontorder.PriceTotal = frontorder.PriceTotal + ordershop.Num*shop.Priceout
+			frontorder.Myshops = append(frontorder.Myshops, FrontOrderShop{
+				ShopID:   shop.ShopID,
+				Name:     shop.Name,
+				Cover:    cover,
+				Priceout: shop.Priceout,
+				Num:      ordershop.Num,
+			})
+
+			rinfos.Infos = append(rinfos.Infos, frontorder)
+		}
+	}
+
+	return rinfos, nil
+}
+
+func PayOrModShoppingCar(username string, pay bool, carparams []byte) error {
+	type FrontOrderShop struct {
+		ShopID   string `json:"shopid"`
+		Name     string `json:"name"`
+		Cover    string `json:"cover"`
+		Priceout uint   `json:"priceout"`
+		Num      uint   `json:"num"`
+	}
+	type FrontOrder struct {
+		OrderID    string           `json:"orderid"`
+		Myshops    []FrontOrderShop `json:"myshops"`
+		PriceTotal uint             `json:"pricetotal"`
+		CreatedAt  time.Time        `json:"addtime"`
+	}
+	var car FrontOrder
+	if err := json.Unmarshal(carparams, &car); err != nil {
+		beego.Error(err)
+		return err
+	}
+
+	var order Order
+	if pay {
+		order.OrderType = OrderTypeForHistory
+	} else {
+		order.OrderType = OrderTypeForPay
+	}
+	order.OrderID = car.OrderID
+	order.PriceTotal = car.PriceTotal
+	order.UserName = username
+	order.ShopIDs = ""
+
+	type CarShop struct {
+		ShopID string `json:"shopid"`
+		Num    uint   `json:"num"`
+	}
+	var carshops []CarShop = make([]CarShop, 0)
+	for _, shop := range car.Myshops {
+		carshops = append(carshops, CarShop{ShopID: shop.ShopID, Num: shop.Num})
+	}
+	shopids, err := json.Marshal(carshops)
+	if err != nil {
+		beego.Error(err)
+		return err
+	}
+	order.ShopIDs = string(shopids)
+
+	if err = db.Save(&order).Error; err != nil {
+		if pay {
+			beego.Error("pay fail! err:", err)
+		} else {
+			beego.Error("modify car fail! err:", err)
+		}
+		return err
+	}
+	return nil
 }
