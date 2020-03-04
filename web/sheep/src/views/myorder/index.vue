@@ -8,10 +8,17 @@
         type="primary"
         color="#0bbd87"
         size="large"
-        :timestamp="activity.timestamp"
+        :timestamp="formattime(activity.addtime)"
         placement="top"
       >
-        <el-card> {{ activity.content }}</el-card>
+        <el-card>
+          <el-table :data="activity.myshops" style="width: 100%">
+            <el-table-column prop="name" label="商品" width="180"> </el-table-column>
+            <el-table-column prop="priceout" label="价格" width="180"> </el-table-column>
+            <el-table-column prop="num" label="数量"> </el-table-column>
+          </el-table>
+          <p style="font-size: 16px;">总价 {{ activity.pricetotal }}</p></el-card
+        >
       </el-timeline-item>
     </el-timeline>
     <p v-if="loading" style="text-align: center; color: #8c939d;">加载中...</p>
@@ -27,27 +34,13 @@ export default {
     return {
       loading: false,
       noMore: false,
-      activities: [
-        {
-          content: '支持使用图标',
-          timestamp: '2018-04-12 20:46'
-        },
-        {
-          content: '支持自定义颜色',
-          timestamp: '2018-04-03 20:46'
-        },
-        {
-          content: '支持自定义尺寸',
-          timestamp: '2018-04-03 20:46'
-        },
-        {
-          content: '默认样式的节点',
-          timestamp: '2018-04-03 20:46'
-        }
-      ]
+      activities: []
     }
   },
   methods: {
+    formattime(paramstime) {
+      return this.$moment(new Date(paramstime)).format('YYYY-MM-DD HH:mm:ss')
+    },
     loadOrders() {
       this.loading = true
       const pageNumber = 12
@@ -56,7 +49,7 @@ export default {
       // 获取历史订单
       GetMyOrders({page: page, pageNumber: pageNumber})
         .then(async res => {
-          this.activities.push.apply(this.activities, res)
+          this.activities.push.apply(this.activities, res.infos)
           if (res.length < pageNumber) {
             this.noMore = true
           }

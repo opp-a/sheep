@@ -124,7 +124,7 @@ export default {
       loading: false,
       noMore: false,
       shops: [],
-      drawer: false,
+      drawer: true,
       shoppingCar: [],
       carorder: {}
     }
