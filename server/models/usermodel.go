@@ -46,3 +46,20 @@ func GetUser(name string) (error, *User) {
 	}
 	return nil, &getuser
 }
+
+func AddUser(username, password string) error {
+	if username == "" || password == "" {
+		return errors.New("params is empty!")
+	}
+	getusers := make([]User, 0)
+	result := db.Where("name=?", username).Find(&getusers)
+	if result.RowsAffected <= 0 {
+		user := User{Name: username, Password: password}
+		if count := db.Create(&user).RowsAffected; count != 1 {
+			beego.Error("add user fail!")
+			return errors.New("add user fail!")
+		}
+		return nil
+	}
+	return errors.New("user is exist!")
+}

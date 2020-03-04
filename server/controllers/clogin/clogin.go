@@ -23,7 +23,6 @@ func (this *CLogin) Login() {
 		this.StopRun()
 	}
 
-	beego.Info(userinfo)
 	// Authenticate
 	err := user.Authenticate(userinfo)
 	if err != nil {
@@ -40,4 +39,31 @@ func (this *CLogin) Login() {
 		this.StopRun()
 	}
 	this.ResponseJson(200, "", map[string]interface{}{"token": "Bearer " + token, "name": userinfo.Name})
+}
+
+// 注册
+func (this *CLogin) Register() {
+	if this.UserName != beego.AppConfig.String("Admin") {
+		beego.Error("this user be not permitted!")
+		this.ResponseJson(416, "you are not permitted!", nil)
+		this.StopRun()
+	}
+
+	type FrontUser struct {
+		Name     string `json:"name"`
+		Password string `json:"password"`
+	}
+	var user FrontUser
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &user); err != nil {
+		beego.Error(err)
+		this.ResponseJson(500, "服务器未收到注册信息", nil)
+		this.StopRun()
+	}
+
+	if err := models.AddUser(user.Name, user.Password); err != nil {
+		beego.Error(err)
+		this.ResponseJson(500, err.Error(), nil)
+		this.StopRun()
+	}
+	this.ResponseJson(200, "", nil)
 }

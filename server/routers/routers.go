@@ -19,6 +19,7 @@ func front() {
 func back() {
 	// 登录
 	beego.Router("/api/login", &clogin.CLogin{}, "get,post:Login")
+	beego.Router("/api/register", &clogin.CLogin{}, "post:Register")
 
 	// shop crud
 	beego.Router("/api/shop/ucreate", &cshopcrud.CShopCRUD{}, "post:UCreateShop")
