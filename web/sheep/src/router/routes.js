@@ -65,6 +65,15 @@ const frameIn = [
           auth: true
         },
         component: _import('mculture')
+      },
+      {
+        path: 'manageUser',
+        name: 'user',
+        meta: {
+          title: '用户注册',
+          auth: false
+        },
+        component: _import('register')
       }
     ]
   }
