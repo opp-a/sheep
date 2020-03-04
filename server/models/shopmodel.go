@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/astaxie/beego"
+	"github.com/jinzhu/gorm"
 	"github.com/segmentio/ksuid"
 )
 
@@ -14,7 +15,7 @@ type Shop struct {
 	Icons     []File    `gorm:"ForeignKey:ShopID" form:"icons" json:"icons"`
 	Pricein   uint      `gorm:"not null;default:'0'" form:"pricein" json:"pricein"`
 	Priceout  uint      `gorm:"not null;default:'0'" form:"priceout" json:"priceout"`
-	Num       uint      `gorm:"not null;default:'0'" form:"num" json:"num"`
+	Num       int       `gorm:"not null;default:'0'" form:"num" json:"num"`
 	Desc      string    `gorm:"Type:varchar(256);not null;default:'its great'" form:"desc" json:"desc"`
 	CreatedAt time.Time `json:"addtime"`
 	UpdatedAt time.Time `json:"updatetime"`
@@ -54,17 +55,19 @@ func DeleteShop(shopids []string) error {
 }
 
 func UpdateShop(shopid string, shop Shop) error {
-	if shopid == "" {
-		return nil
-	}
-	shop.ShopID = shopid
+	return db.Transaction(func(tx *gorm.DB) error {
+		if shopid == "" {
+			return nil
+		}
+		shop.ShopID = shopid
 
-	beego.Debug(shop.Desc)
-	if err := db.Save(&shop).Error; err != nil {
-		beego.Error("update shop fail! err:", err)
-		return err
-	}
-	return nil
+		beego.Debug(shop.Desc)
+		if err := tx.Save(&shop).Error; err != nil {
+			beego.Error("update shop fail! err:", err)
+			return err
+		}
+		return nil
+	})
 }
 
 func ListShop(username string, pageindex, pagesize uint) (interface{}, error) {
@@ -106,7 +109,7 @@ func ListShop(username string, pageindex, pagesize uint) (interface{}, error) {
 			Icons:     make([]string, 0),
 			Pricein:   shop.Pricein,
 			Priceout:  shop.Priceout,
-			Num:       shop.Num,
+			Num:       uint(shop.Num),
 			Desc:      shop.Desc,
 			CreatedAt: shop.CreatedAt})
 
@@ -125,4 +128,27 @@ func ListShop(username string, pageindex, pagesize uint) (interface{}, error) {
 	}
 
 	return rinfos, nil
+}
+
+func ConsumeShops(tx *gorm.DB, shopid string, num int) error {
+	if shopid == "" || num <= 0 {
+		return nil
+	}
+
+	var shop Shop
+	if err := tx.First(&shop, "shop_id = ?", shopid).Error; err != nil {
+		beego.Error(err)
+		tx.Rollback()
+		return err
+	}
+
+	shop.Num = shop.Num - num
+
+	if err := tx.Model(&shop).Update("num", shop.Num).Error; err != nil {
+		beego.Error(err)
+		tx.Rollback()
+		return err
+	}
+
+	return nil
 }

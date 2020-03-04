@@ -158,7 +158,7 @@ func ListHistoryOrder(username string, pageindex, pagesize uint) (interface{}, e
 		for _, ordershop := range ordershops {
 			// get shop
 			var shop Shop
-			if err := db.First(&shop, "shopid = ?", ordershop.ShopID).Error; err != nil {
+			if err := db.First(&shop, "shop_id = ?", ordershop.ShopID).Error; err != nil {
 				beego.Error("get shop fail! err:", err)
 				return rinfos, err
 			}
@@ -202,8 +202,25 @@ func PayOrModShoppingCar(username string, pay bool, carparams []byte) error {
 		return err
 	}
 
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
 	var order Order
 	if pay {
+		for _, carshop := range car.Myshops {
+			if err := ConsumeShops(tx, carshop.ShopID, int(carshop.Num)); err != nil {
+				beego.Error(err)
+				return err
+			}
+		}
 		order.OrderType = OrderTypeForHistory
 	} else {
 		order.OrderType = OrderTypeForPay
@@ -228,13 +245,14 @@ func PayOrModShoppingCar(username string, pay bool, carparams []byte) error {
 	}
 	order.ShopIDs = string(shopids)
 
-	if err = db.Save(&order).Error; err != nil {
+	if err = tx.Save(&order).Error; err != nil {
 		if pay {
 			beego.Error("pay fail! err:", err)
 		} else {
 			beego.Error("modify car fail! err:", err)
 		}
+		tx.Rollback()
 		return err
 	}
-	return nil
+	return tx.Commit().Error
 }

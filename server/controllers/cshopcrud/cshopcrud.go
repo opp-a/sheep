@@ -44,7 +44,7 @@ func (this *CShopCRUD) UCreateShop() {
 	}
 	shopinfo.Pricein = shopparam.Pricein
 	shopinfo.Priceout = shopparam.Priceout
-	shopinfo.Num = shopparam.Num
+	shopinfo.Num = int(shopparam.Num)
 	shopinfo.Desc = shopparam.Desc
 	if shopinfo.ShopID == "" {
 		if err := models.AddShop([]models.Shop{shopinfo}); err != nil {
