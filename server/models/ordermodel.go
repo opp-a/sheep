@@ -71,9 +71,8 @@ func GetShoppingCar(username string) (interface{}, error) {
 	for _, carshop := range carshops {
 		// get shop
 		var shop Shop
-		if err := db.First(&shop, "shop_id = ?", carshop.ShopID).Error; err != nil {
-			beego.Error("get shop fail! err:", err)
-			return rcar, err
+		if db.First(&shop, "shop_id = ?", carshop.ShopID).RecordNotFound() {
+			continue
 		}
 		var cover string
 		if len(shop.Icons) > 0 {
