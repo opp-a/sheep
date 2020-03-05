@@ -39,15 +39,11 @@ func GetShoppingCar(username string) (interface{}, error) {
 	}
 	var rcar FrontOrder
 
-	var count int
-	if err := db.Model(&Order{}).Where("order_type = ? AND user_name = ?", OrderTypeForPay, username).
-		Count(&count).Error; err != nil {
-		beego.Error(err)
-		return rcar, err
-	}
-
 	var order Order
-	if count <= 0 {
+	if db.Model(&Order{}).
+		Where("order_type = ? AND user_name = ?", OrderTypeForPay, username).
+		First(&order).
+		RecordNotFound() {
 		uid, _ := ksuid.NewRandomWithTime(time.Now())
 		if err := db.FirstOrCreate(&order, Order{
 			OrderID:   uid.String(),
@@ -56,14 +52,7 @@ func GetShoppingCar(username string) (interface{}, error) {
 			beego.Error("get and init shopping car fail! err:", err)
 			return rcar, err
 		}
-	} else {
-		if err := db.Where("order_type = ? AND user_name = ?", OrderTypeForPay, username).
-			First(&order).Error; err != nil {
-			beego.Error("get shopping car fail! err:", err)
-			return rcar, err
-		}
 	}
-
 	rcar.OrderID = order.OrderID
 	rcar.CreatedAt = order.CreatedAt
 	rcar.PriceTotal = 0
