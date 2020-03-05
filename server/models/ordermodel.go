@@ -119,12 +119,22 @@ func ListHistoryOrder(username string, pageindex, pagesize uint) (interface{}, e
 	index := (pageindex - 1) * pagesize
 
 	var orders []Order = make([]Order, 0)
-	if err := db.Where("order_type = ? AND user_name = ?", OrderTypeForHistory, username).
-		Order("created_at desc").
-		Limit(pagesize).Offset(index).
-		Find(&orders).Error; err != nil {
-		beego.Error("list history order fail! err:", err)
-		return rinfos, err
+	if username == beego.AppConfig.String("Admin") {
+		if err := db.Where("order_type = ?", OrderTypeForHistory).
+			Order("created_at desc").
+			Limit(pagesize).Offset(index).
+			Find(&orders).Error; err != nil {
+			beego.Error("list history order fail! err:", err)
+			return rinfos, err
+		}
+	} else {
+		if err := db.Where("order_type = ? AND user_name = ?", OrderTypeForHistory, username).
+			Order("created_at desc").
+			Limit(pagesize).Offset(index).
+			Find(&orders).Error; err != nil {
+			beego.Error("list history order fail! err:", err)
+			return rinfos, err
+		}
 	}
 
 	for _, order := range orders {
