@@ -65,12 +65,12 @@
       </el-collapse-item>
     </el-collapse>
     <el-table :data="shops" :summary-method="getSummaries" border show-summary stripe style="width: 100%;">
-      <el-table-column prop="shopid" label="商品ID" width="0"> </el-table-column>
-      <el-table-column prop="name" label="名称" width="230"> </el-table-column>
-      <el-table-column prop="pricein" label="进货价(￥)" width="180"> </el-table-column>
-      <el-table-column prop="priceout" label="出货价(￥)" width="180"> </el-table-column>
-      <el-table-column prop="num" label="存货量" width="180"> </el-table-column>
-      <el-table-column prop="desc" label="备注" width="350"> </el-table-column>
+      <el-table-column prop="shopid" label="商品ID" width="200"> </el-table-column>
+      <el-table-column prop="name" label="名称" width="150"> </el-table-column>
+      <el-table-column prop="pricein" label="进货价(￥)" width="60"> </el-table-column>
+      <el-table-column prop="priceout" label="出货价(￥)" width="60"> </el-table-column>
+      <el-table-column prop="num" label="存货量" width="60"> </el-table-column>
+      <el-table-column prop="desc" label="备注"> </el-table-column>
       <el-table-column prop="addtime" label="上新时间"> </el-table-column>
       <el-table-column fixed="right" label="操作" width="120">
         <template slot-scope="scope">
