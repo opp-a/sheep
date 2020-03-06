@@ -1,3 +1,5 @@
+#### 提示：一下图没有更新过，部分内容存在裁剪和修改
+
 ## 你是最棒的！ Little Sheep！！！
 ![image](./document/sheep.jpg)
 
