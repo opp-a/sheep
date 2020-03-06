@@ -25,7 +25,7 @@ func (this *CShopCRUD) UCreateShop() {
 		Icons    []string `json:"icons"`
 		Pricein  uint     `json:"pricein"`
 		Priceout uint     `json:"priceout"`
-		Num      uint     `json:"num"`
+		Num      int      `json:"num"`
 		Desc     string   `json:"desc"`
 	}{}
 
@@ -44,7 +44,7 @@ func (this *CShopCRUD) UCreateShop() {
 	}
 	shopinfo.Pricein = shopparam.Pricein
 	shopinfo.Priceout = shopparam.Priceout
-	shopinfo.Num = int(shopparam.Num)
+	shopinfo.Num = shopparam.Num
 	shopinfo.Desc = shopparam.Desc
 	if shopinfo.ShopID == "" {
 		if err := models.AddShop([]models.Shop{shopinfo}); err != nil {

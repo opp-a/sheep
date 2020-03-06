@@ -97,6 +97,7 @@ func ListHistoryOrder(username string, pageindex, pagesize uint) (interface{}, e
 		Cover    string `json:"cover"`
 		Priceout uint   `json:"priceout"`
 		Num      uint   `json:"num"`
+		User     string `json:"user"`
 	}
 	type FrontOrder struct {
 		OrderID    string           `json:"orderid"`
@@ -171,6 +172,7 @@ func ListHistoryOrder(username string, pageindex, pagesize uint) (interface{}, e
 				Cover:    cover,
 				Priceout: shop.Priceout,
 				Num:      ordershop.Num,
+				User:     order.UserName,
 			})
 
 			rinfos.Infos = append(rinfos.Infos, frontorder)
