@@ -109,7 +109,7 @@ func ListShop(username string, pageindex, pagesize uint) (interface{}, error) {
 			Icons:     make([]string, 0),
 			Pricein:   shop.Pricein,
 			Priceout:  shop.Priceout,
-			Num:       uint(shop.Num),
+			Num:       shop.Num,
 			Desc:      shop.Desc,
 			CreatedAt: shop.CreatedAt})
 
