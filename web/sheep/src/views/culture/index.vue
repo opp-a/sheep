@@ -112,7 +112,7 @@ export default {
     getPictures() {
       this.loading = true
       const pageNumber = 12
-      const page = this.culturePictures.length / pageNumber + 1
+      const page = Math.floor(this.culturePictures.length / pageNumber) + 1
 
       // 获取文化墙的图片
       GetCulturePictures({page: page, pageNumber: pageNumber})

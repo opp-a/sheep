@@ -44,7 +44,7 @@ export default {
     loadOrders() {
       this.loading = true
       const pageNumber = 12
-      const page = this.activities.length / pageNumber + 1
+      const page = Math.floor(this.activities.length / pageNumber) + 1
 
       // 获取历史订单
       GetMyOrders({page: page, pageNumber: pageNumber})

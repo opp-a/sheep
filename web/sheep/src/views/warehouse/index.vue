@@ -185,7 +185,7 @@ export default {
     load: function() {
       this.loading = true
       const pageNumber = 19
-      const page = this.shops.length / pageNumber + 1
+      const page = Math.floor(this.shops.length / pageNumber) + 1
       // 开始请求获取商品
       GetShops({page: page, pageNumber: pageNumber})
         .then(async res => {
