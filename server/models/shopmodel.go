@@ -65,6 +65,7 @@ func UpdateShop(shopid string, shop Shop) error {
 		files := make([]File, 0)
 		for _, icon := range shop.Icons {
 			if file := GetFile(shopid, icon.Content); file == nil {
+				files = append(files, icon)
 				continue
 			} else {
 				files = append(files, *file)
