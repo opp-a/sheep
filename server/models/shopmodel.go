@@ -78,7 +78,7 @@ func ListShop(username string, pageindex, pagesize uint) (interface{}, error) {
 		Icons     []string  `json:"icons"`
 		Pricein   uint      `json:"pricein"`
 		Priceout  uint      `json:"priceout"`
-		Num       uint      `json:"num"`
+		Num       int       `json:"num"`
 		Desc      string    `json:"desc"`
 		CreatedAt time.Time `json:"addtime"`
 	}
