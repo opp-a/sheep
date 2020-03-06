@@ -59,9 +59,18 @@ func UpdateShop(shopid string, shop Shop) error {
 		if shopid == "" {
 			return nil
 		}
+
 		shop.ShopID = shopid
 
-		beego.Debug(shop.Desc)
+		files := make([]File, 0)
+		for _, icon := range shop.Icons {
+			if file := GetFile(shopid, icon.Content); file == nil {
+				continue
+			} else {
+				files = append(files, *file)
+			}
+		}
+		shop.Icons = files
 		if err := tx.Save(&shop).Error; err != nil {
 			beego.Error("update shop fail! err:", err)
 			return err
