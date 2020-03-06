@@ -36,7 +36,7 @@ function errorLog(error) {
 // 创建一个 axios 实例
 const service = axios.create({
   baseURL: process.env.VUE_APP_API,
-  timeout: 5000 // 请求超时时间
+  timeout: 30000 // 请求超时时间
 })
 
 // 请求拦截器
@@ -64,7 +64,7 @@ service.interceptors.response.use(
     const {code} = dataAxios
     // 根据 code 进行判断
     if (code === undefined) {
-      // 如果没有 code 代表这不是项目后端开发的接口 比如可能是 D2Admin 请求最新版本
+      // 如果没有 code 代表这不是项目后端开发的接口
       return dataAxios
     } else {
       // 有 code 代表这是一个后端接口 可以进行进一步的判断
