@@ -16,6 +16,7 @@
             <el-table-column prop="name" label="商品" width="180"> </el-table-column>
             <el-table-column prop="priceout" label="价格" width="180"> </el-table-column>
             <el-table-column prop="num" label="数量"> </el-table-column>
+            <el-table-column prop="user" label="下单账户"> </el-table-column>
           </el-table>
           <p style="font-size: 16px;">总价 {{ activity.pricetotal }}</p></el-card
         >
