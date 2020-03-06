@@ -163,7 +163,6 @@ export default {
   methods: {
     // 无限加载
     showrowsize: function(row) {
-      console.log(this.shops[0].icons[0])
       const rowNumber = 4
       if (row * rowNumber > this.shops.length) {
         return this.shops.length % rowNumber
