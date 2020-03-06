@@ -71,7 +71,7 @@ func UpdateShop(shopid string, shop Shop) error {
 				files = append(files, *file)
 			}
 		}
-		shop.Icons = files
+		shop.Icons = append(shop.Icons[:0], files)
 		if err := tx.Save(&shop).Error; err != nil {
 			beego.Error("update shop fail! err:", err)
 			return err
