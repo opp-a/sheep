@@ -62,16 +62,11 @@ func UpdateShop(shopid string, shop Shop) error {
 
 		shop.ShopID = shopid
 
-		files := make([]File, 0)
-		for _, icon := range shop.Icons {
-			if file := GetFile(shopid, icon.Content); file == nil {
-				files = append(files, icon)
-				continue
-			} else {
-				files = append(files, *file)
-			}
+		if err := DeleteFile(tx, shopid); err != nil {
+			beego.Error(err)
+			return err
 		}
-		shop.Icons = append(shop.Icons[:0], files)
+
 		if err := tx.Save(&shop).Error; err != nil {
 			beego.Error("update shop fail! err:", err)
 			return err

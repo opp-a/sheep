@@ -22,3 +22,13 @@ func GetFile(shopid, content string) *File {
 	}
 	return nil
 }
+
+func DeleteFile(tx *gorm.DB, shopid string) error {
+	if err := db.Where("shopid = ?", shopid).Delete(&File{}).Error; err != nil {
+		beego.Error(err)
+		tx.Rollback()
+		return err
+	}
+
+	return nil
+}
