@@ -47,7 +47,6 @@ fShowStep ()
 fBuildGO()
 {
 	git pull	
-	export GOROOT=/home/Y/install/go11/go
 	PROJECT_NAME=sheep
 	PROJECT_MAIN=*.go
 	COMMIT_NUMBER=`git rev-list HEAD | wc -l | awk '{print $1}'`
