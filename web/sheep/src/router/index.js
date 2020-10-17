@@ -9,11 +9,11 @@ import util from '@/libs/util.js'
 // fix vue-router NavigationDuplicated
 const VueRouterPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
-  return VueRouterPush.call(this, location).catch(err => err)
+  return VueRouterPush.call(this, location).catch((err) => err)
 }
 const VueRouterReplace = VueRouter.prototype.replace
 VueRouter.prototype.replace = function replace(location) {
-  return VueRouterReplace.call(this, location).catch(err => err)
+  return VueRouterReplace.call(this, location).catch((err) => err)
 }
 
 Vue.use(VueRouter)
@@ -53,7 +53,7 @@ router.beforeEach(async (to, from, next) => {
   // 关闭搜索面板
   // store.commit('d2admin/search/set', false)
   // 验证当前路由所有的匹配中是否需要有登录验证的
-  if (to.matched.some(r => r.meta.auth)) {
+  if (to.matched.some((r) => r.meta.auth)) {
     // 这里暂时将cookie里是否存有token作为验证是否登录的条件
     // 请根据自身业务需要修改
     const token = util.cookies.get('token')
@@ -77,7 +77,7 @@ router.beforeEach(async (to, from, next) => {
   }
 })
 
-router.afterEach(to => {
+router.afterEach((to) => {
   // 进度条
   NProgress.done()
   // 多页控制 打开新的页面

@@ -1,4 +1,5 @@
 import layoutHeader from '@/layout'
+import ticket from '@/staticpage/ticket'
 // 由于懒加载页面太多的话会造成webpack热更新太慢，所以开发环境不使用懒加载，只有生产环境使用懒加载
 const _import = require('@/libs/util.import.production')
 
@@ -82,6 +83,22 @@ const frameIn = [
 /**
  * 在主框架之外显示
  */
+const frameStatic = [
+  // 刮刮乐
+  {
+    path: '/ticket',
+    name: 'ticket',
+    meta: {
+      title: '刮刮乐',
+      auth: false
+    },
+    component: ticket
+  }
+]
+
+/**
+ * 在主框架之外显示
+ */
 const frameIndex = [
   // 主页
   {
@@ -126,4 +143,4 @@ const errorPage = [
 export const frameInRoutes = frameIn
 
 // 重新组织后导出
-export default [...frameIn, ...frameIndex, ...frameOut, ...errorPage]
+export default [...frameIn, ...frameIndex, ...frameOut, ...errorPage, ...frameStatic]
