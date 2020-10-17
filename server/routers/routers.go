@@ -13,6 +13,7 @@ import (
 func front() {
 	// for all
 	beego.Router("/home/*", &chome.CHome{})
+	beego.Router("/ticket", &chome.CHome{})
 }
 
 //后台路由
